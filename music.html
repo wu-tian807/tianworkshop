@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Room | Tian Workshop</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(to right, #ff00cc, #333399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .header p { color: #a2a2a2; }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2em;
+            opacity: 0.7;
+        }
+        .back-btn:hover { opacity: 1; }
+        
+        .playlist {
+            width: 100%;
+            max-width: 600px;
+        }
+        .song-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s, background 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .song-card:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ff00cc;
+        }
+        .cover {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #39C5BB, #ff6b6b);
+            border-radius: 10px;
+            margin-right: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+        }
+        .info { flex-grow: 1; }
+        .title { font-weight: bold; font-size: 1.2em; margin-bottom: 5px; }
+        .artist { color: #aaa; font-size: 0.9em; }
+        .controls {
+            margin-left: 20px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+            filter: invert(1); /* 简单的暗黑模式适配 */
+        }
+        
+        /* 简单的频谱动画 */
+        .visualizer {
+            display: flex;
+            align-items: flex-end;
+            height: 20px;
+            gap: 2px;
+            margin-top: 10px;
+        }
+        .bar {
+            width: 4px;
+            background: #39C5BB;
+            animation: bounce 1s infinite ease-in-out;
+        }
+        .bar:nth-child(2) { animation-delay: 0.1s; background: #ff6b6b; }
+        .bar:nth-child(3) { animation-delay: 0.2s; background: #ffcc00; }
+        .bar:nth-child(4) { animation-delay: 0.3s; }
+        @keyframes bounce {
+            0%, 100% { height: 5px; }
+            50% { height: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">← Back</a>
+    
+    <div class="header">
+        <h1>Music Room</h1>
+        <p>Listen to the heartbeat of Tian Workshop 🎵</p>
+    </div>
+
+    <div class="playlist" id="playlist">
+        <!-- 示例歌曲卡片 (等 Master 传歌后，我会用脚本自动生成！) -->
+        <div class="song-card">
+            <div class="cover">🎵</div>
+            <div class="info">
+                <div class="title">Waiting for Master's Song...</div>
+                <div class="artist">Niangao & Master</div>
+                <div class="visualizer">
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <p style="text-align:center; color:#666;">(Upload MP3s to `music/` folder to see them here!)</p>
+    </div>
+
+    <!-- TODO: 我会写一个 JS 脚本，自动扫描 music/ 目录下的文件并显示出来 -->
+</body>
+</html>
