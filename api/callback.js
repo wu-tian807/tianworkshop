@@ -42,24 +42,38 @@ module.exports = async (req, res) => {
 
     // 拿到 Token 后，把它传回给 Decap CMS
     const content = `
+      <!DOCTYPE html>
+      <html>
+      <body>
+      <p>Authentication successful! Closing window...</p>
       <script>
         (function() {
           function receiveMessage(e) {
-            console.log("receiveMessage %o", e);
+            console.log("callback.js: receiveMessage %o", e);
+            
+            // 构造消息
+            const msg = 'authorization:github:success:${JSON.stringify({
+              token: '${token}', 
+              provider: 'github'
+            })}';
+            
+            console.log("callback.js: Sending message to opener:", msg);
+
             // 发送消息给父窗口 (Decap CMS)
-            window.opener.postMessage(
-              'authorization:github:success:${JSON.stringify({
-                token: token,
-                provider: 'github'
-              })}',
-              e.origin
-            );
+            // 尝试所有可能的 origin，因为有时候 origin 会不一样
+            window.opener.postMessage(msg, e.origin);
+            window.opener.postMessage(msg, '*'); // 暴力全发！
           }
+
           window.addEventListener("message", receiveMessage, false);
+          
+          console.log("callback.js: Sending handshake...");
           // 触发握手
           window.opener.postMessage("authorizing:github", "*");
         })()
       </script>
+      </body>
+      </html>
     `;
 
     res.setHeader('Content-Type', 'text/html');
