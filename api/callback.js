@@ -40,37 +40,36 @@ module.exports = async (req, res) => {
 
     const token = result.access_token;
 
-    // 拿到 Token 后，把它传回给 Decap CMS
+    // 拿到 Token 后，存入 localStorage 并关闭
     const content = `
       <!DOCTYPE html>
       <html>
       <body>
-      <p>Authentication successful! Closing window...</p>
+      <p>Authentication successful! Saving token...</p>
       <script>
-        (function() {
-          function receiveMessage(e) {
-            console.log("callback.js: receiveMessage %o", e);
-            
-            // 构造消息
-            const msg = 'authorization:github:success:${JSON.stringify({
-              token: '${token}', 
-              provider: 'github'
-            })}';
-            
-            console.log("callback.js: Sending message to opener:", msg);
+        // 方案 Y: 使用 localStorage 共享 Token
+        // 因为 callback 页面和 admin 页面是同源的，所以可以共享！
+        localStorage.setItem('netlify-cms-github-oauth-token', '${token}');
+        
+        // 同时也尝试 postMessage (以此为辅)
+        const msg = 'authorization:github:success:${JSON.stringify({
+          token: '${token}', 
+          provider: 'github'
+        })}';
+        
+        try {
+            window.opener.postMessage(msg, '*');
+            window.opener.postMessage("authorizing:github", "*");
+        } catch(e) {
+            console.error(e);
+        }
 
-            // 发送消息给父窗口 (Decap CMS)
-            // 尝试所有可能的 origin，因为有时候 origin 会不一样
-            window.opener.postMessage(msg, e.origin);
-            window.opener.postMessage(msg, '*'); // 暴力全发！
-          }
-
-          window.addEventListener("message", receiveMessage, false);
-          
-          console.log("callback.js: Sending handshake...");
-          // 触发握手
-          window.opener.postMessage("authorizing:github", "*");
-        })()
+        document.write("<p>Token saved! Closing...</p>");
+        
+        // 稍微等一下再关，给主窗口一点反应时间
+        setTimeout(() => {
+            window.close();
+        }, 1000);
       </script>
       </body>
       </html>
