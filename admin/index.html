@@ -4,9 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tian Workshop CMS</title>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <!-- 使用更稳定的 jsDelivr CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.1.2/dist/decap-cms.js"></script>
+  <style>
+    body { font-family: sans-serif; }
+    #error-msg { display: none; padding: 20px; color: red; background: #ffe6e6; border: 1px solid red; margin: 20px; border-radius: 5px; }
+  </style>
 </head>
 <body>
-  <!-- Decap CMS 将在这里自动加载 -->
+  <div id="error-msg">
+    <h3>CMS Loading Failed! 😢</h3>
+    <p>如果长时间卡在这里，可能是网络问题。</p>
+    <p>请按 F12 打开控制台 (Console) 截图发给 Niangao。</p>
+  </div>
+
+  <script>
+    // 简单的超时检测
+    setTimeout(function() {
+      if (!window.CMS) {
+        document.getElementById('error-msg').style.display = 'block';
+      }
+    }, 5000); // 5秒没加载出来就报错
+  </script>
 </body>
 </html>
