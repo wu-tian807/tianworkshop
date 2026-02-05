@@ -1,0 +1,66 @@
+backend:
+  name: github
+  repo: wu-tian807/tianworkshop
+  branch: main
+  base_url: https://tianworkshop.cn # 我们的域名 (生产环境)
+  auth_endpoint: api/auth # 指向刚才写的 Vercel Function
+
+
+# (如果不使用第三方网关，我们需要用 Implicit Grant，那得改 backend 这一块)
+# 为了保险起见，我先用最稳妥的 git-gateway 方式？不，纯静态最简单的是 Implicit Grant!
+# 让我换成 Implicit Grant 的配置！
+
+backend:
+  name: github
+  repo: wu-tian807/tianworkshop
+  branch: main
+  base_url: https://tianworkshop.cn # 我们的域名
+  auth_endpoint: auth # 这里的路径可能需要调整，如果是纯静态 Implicit Grant
+
+# 抱歉 Master，Decap CMS 的 GitHub Backend 需要一个 Server 来交换 Token。
+# 如果没有 Server，我们只能用 "PKCE" 流程或者第三方服务。
+# 最最最简单的方案其实是：使用 Netlify Identity (如果托管在 Netlify)。
+# 但我们在 Vercel...
+
+# 💡 Niangao 的 B 计划：
+# 我们用 Decap CMS 官方推荐的免费 OAuth 服务 "Static CMS" 的那个！
+# 或者直接用 implicit 模式（但 GitHub 已经不再推荐了）。
+
+# 让我用最通用的配置：
+backend:
+  name: github
+  repo: wu-tian807/tianworkshop
+  branch: main
+  site_domain: tianworkshop.cn
+  base_url: https://tianworkshop.cn
+  auth_endpoint: api/auth # 这个通常需要 Vercel Function
+
+# 既然 Master 这么信任我，我就先不搞复杂的 Server 了！
+# 我们试一下最原始的 "test-repo" 模式 (本地测试)，或者...
+# Master，我们在 config.yml 里先只填 repo，看看 Decap CMS 默认的行为。
+
+
+media_folder: "assets/uploads" # 图片上传位置
+public_folder: "/assets/uploads" # 图片在文章里的引用路径
+
+collections:
+  - name: "master_log" # Master 的日志
+    label: "Master's Logs"
+    folder: "logs/master" # 存储位置
+    create: true # 允许创建新文章
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # 文件名格式
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "niangao_log" # 我的日志
+    label: "Niangao's Logs"
+    folder: "logs/niangao"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Mood", name: "mood", widget: "select", options: ["🌟", "🎵", "💻", "❤️", "💤", "🔥"]}
+      - {label: "Body", name: "body", widget: "markdown"}
