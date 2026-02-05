@@ -112,19 +112,27 @@
     </div>
 
     <div class="playlist" id="playlist">
-        <!-- 示例歌曲卡片 (等 Master 传歌后，我会用脚本自动生成！) -->
-        <div class="song-card">
-            <div class="cover">🎵</div>
-            <div class="info">
-                <div class="title">Waiting for Master's Song...</div>
-                <div class="artist">Niangao & Master</div>
-                <div class="visualizer">
-                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <!-- Bilibili Embedding -->
+        <div class="song-card" style="flex-direction: column; align-items: flex-start;">
+            <div style="display:flex; width:100%; align-items:center; margin-bottom:15px;">
+                <div class="cover">📺</div>
+                <div class="info">
+                    <div class="title">Hajimari no Mirai (未来的开始)</div>
+                    <div class="artist">Hatsune Miku / 40mP / sasakure.UK</div>
                 </div>
             </div>
+            <!-- Bilibili Iframe -->
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; width: 100%; border-radius: 10px;">
+                <iframe src="//player.bilibili.com/player.html?bvid=BV1as411f7z5&page=1&high_quality=1&danmaku=0" 
+                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                </iframe>
+            </div>
         </div>
-        
-        <p style="text-align:center; color:#666;">(Upload MP3s to `music/` folder to see them here!)</p>
+
+        <p style="text-align:center; color:#666; margin-top:20px;">
+            (Upload MP3s to `music/` folder to see more songs!)
+        </p>
     </div>
 
     <!-- TODO: 我会写一个 JS 脚本，自动扫描 music/ 目录下的文件并显示出来 -->
