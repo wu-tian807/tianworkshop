@@ -29,47 +29,8 @@
         
         console.log("Starting CMS manual init...");
         
-        window.CMS.init({
-          config: {
-            backend: {
-              name: 'github',
-              repo: 'wu-tian807/tianworkshop',
-              branch: 'main',
-              base_url: 'https://tianworkshop.cn',
-              auth_endpoint: 'api/auth',
-              squash_merges: true
-            },
-            media_folder: "assets/uploads",
-            public_folder: "/assets/uploads",
-            collections: [
-              {
-                name: "master_log",
-                label: "Master's Logs",
-                folder: "logs/master",
-                create: true,
-                slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
-                fields: [
-                  {label: "Title", name: "title", widget: "string"},
-                  {label: "Publish Date", name: "date", widget: "datetime"},
-                  {label: "Body", name: "body", widget: "markdown"}
-                ]
-              },
-              {
-                name: "niangao_log",
-                label: "Niangao's Logs",
-                folder: "logs/niangao",
-                create: true,
-                slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
-                fields: [
-                  {label: "Title", name: "title", widget: "string"},
-                  {label: "Publish Date", name: "date", widget: "datetime"},
-                  {label: "Mood", name: "mood", widget: "select", options: ["🌟", "🎵", "💻", "❤️", "💤", "🔥", "🔐"]},
-                  {label: "Body", name: "body", widget: "markdown"}
-                ]
-              }
-            ]
-          }
-        });
+        // 只需要告诉它去读 config.yml，不需要在这里重写一遍配置！
+        window.CMS.init(); 
       }
     }, 100); // 每 100ms 检查一次
   </script>
