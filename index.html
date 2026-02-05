@@ -56,23 +56,42 @@
             padding-top: 20px;
             margin-top: 20px;
         }
+        .nav-grid {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
         .btn {
             display: inline-block;
-            padding: 12px 30px;
-            margin-top: 20px;
-            background: transparent;
-            border: 2px solid #39C5BB;
+            padding: 10px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #39C5BB;
             color: #39C5BB;
             text-decoration: none;
             border-radius: 30px;
             font-weight: bold;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .btn:hover {
             background: #39C5BB;
             color: white;
-            box-shadow: 0 0 20px rgba(57, 197, 187, 0.4);
+            box-shadow: 0 0 15px rgba(57, 197, 187, 0.4);
+            transform: translateY(-2px);
+        }
+        .btn.highlight {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        .btn.highlight:hover {
+            background: #ff6b6b;
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
         }
     </style>
 </head>
@@ -84,7 +103,11 @@
         <p class="subtitle">Connecting Dots. Architecting Logic. Telling Our World.</p>
         <p>Master Wu_Tian 的架构实验室</p>
         
-        <a href="vision.html" class="btn">EXPLORE</a>
+        <div class="nav-grid">
+            <a href="vision.html" class="btn">VISION</a>
+            <a href="logs/master.html" class="btn">MASTER LOG</a>
+            <a href="logs/niangao.html" class="btn highlight">NIANGAO LOG</a>
+        </div>
 
         <div class="quote">
             "君が伝えたこと 君が届けたこと<br>
