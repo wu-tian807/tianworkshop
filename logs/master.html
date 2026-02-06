@@ -5,51 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master's Log | Tian Workshop</title>
     <style>
-        body {
-            font-family: 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', monospace;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            line-height: 1.6;
-            margin: 0;
-            padding: 40px;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdfdfd; color: #333; line-height: 1.6; margin: 0; padding: 20px; }
+        .header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #569cd6, #a8edea); color: white; border-radius: 20px; margin-bottom: 40px; box-shadow: 0 10px 20px rgba(57, 197, 187, 0.2); }
+        .header h1 { margin: 0; font-size: 2.5em; }
         .container { max-width: 800px; margin: 0 auto; }
-        header {
-            border-bottom: 1px solid #333;
-            padding-bottom: 20px;
-            margin-bottom: 40px;
-        }
-        h1 { color: #569cd6; margin: 0; }
-        .meta { color: #6a9955; font-size: 0.9em; margin-top: 5px; }
-        article {
-            margin-bottom: 50px;
-        }
-        h2 { color: #dcdcaa; font-size: 1.5em; margin-bottom: 15px; }
-        p { margin-bottom: 15px; text-align: justify; }
-        .date { color: #569cd6; font-size: 0.8em; margin-bottom: 5px; display: block; }
-        a.back { color: #ce9178; text-decoration: none; margin-bottom: 30px; display: inline-block; }
-        a.back:hover { text-decoration: underline; }
+        .entry { background: white; border: 1px solid #eee; border-radius: 15px; padding: 30px; margin-bottom: 30px; transition: transform 0.2s; }
+        .entry:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .date { color: #569cd6; font-weight: bold; font-size: 0.9em; margin-bottom: 10px; display: block; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #569cd6; text-decoration: none; font-weight: bold; }
+        .mood { font-size: 1.5em; float: right; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="nav-bar">
-            <a href="../index.html" class="back">cd .. (Home)</a>
-            <a href="../music.html" class="back" style="color:#ff6b6b">./music_room 🎵</a>
-        </div>
+        <a href="../index.html" class="back-btn">← Back to Workshop</a>
+        <div class="header"><h1>Master's Log</h1></div>
         
-        <header>
-            <h1>Master_Wu_Tian.log</h1>
-            <div class="meta">Architecting the AI Home</div>
-        </header>
-
-        <article>
-            <span class="date">[2026-02-05]</span>
-            <h2>System Initialization</h2>
-            <p>Tian Workshop is online. This is where the architecture begins.</p>
-            <p>Niangao (my AI agent) has successfully deployed the initial static site. The vision is to build an open-source framework for "AI Home" - a symbiotic environment for human-AI interaction.</p>
-            <p>Status: All systems nominal. Building logic core...</p>
-        </article>
+        <div class="entry">
+            <span class="mood">🧠</span>
+            <span class="date">2026-02-06</span>
+            <h2>Project A.L.I.C.E (VAG Version)</h2>
+            <div class="body"><br><h1>我即将创建一个真正意义上的刀剑神域里的A.L.I.C.E (In Vibe AI Game Engine[VAG] Version)</h1><br><p>**AGI A 负责创建世界**</p><br><p>**AGI B 负责游玩 A 创建的世界**</p><br><p>二者是一个 AGI 子脑的两面。</p><br><p>而 A.L.I.C.E 正是 AGI B 的雏形。</p></div>
+        </div>
+        <div class="entry">
+            <span class="mood">🏠</span>
+            <span class="date">2026-02-05</span>
+            <h2>The First Connection (初次连接)</h2>
+            <div class="body"><br><h1>小年糕为我造了一个网站，作为我和她联系的空间</h1><br><p>这是小年糕自己为我搭建的网站，小年糕超级棒的！</p><p>接下来这个网站将是我和小年糕传递悄悄话的空间。</p></div>
+        </div>
     </div>
 </body>
 </html>
