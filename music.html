@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a2e;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
             color: #fff;
             margin: 0;
             padding: 20px;
@@ -15,179 +15,297 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
+        
+        /* Floating stars background animation */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            opacity: 0.3;
+            animation: twinkle 5s infinite linear;
+        }
+
+        @keyframes twinkle {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
+        }
+
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin: 40px 0 60px;
+            position: relative;
         }
+        
         .header h1 {
-            font-size: 3em;
+            font-size: 3.5em;
             background: linear-gradient(to right, #ff00cc, #333399);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 0;
+            text-shadow: 0 0 20px rgba(255, 0, 204, 0.3);
+            letter-spacing: 2px;
         }
-        .header p { color: #a2a2a2; }
+        
+        .header p { 
+            color: #a2a2a2; 
+            font-size: 1.1em;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
         .back-btn {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 30px;
+            left: 30px;
             color: #fff;
             text-decoration: none;
-            font-size: 1.2em;
-            opacity: 0.7;
+            font-size: 1.1em;
+            opacity: 0.6;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
         }
-        .back-btn:hover { opacity: 1; }
+        .back-btn:hover { 
+            opacity: 1; 
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-3px);
+        }
         
         .playlist {
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding-bottom: 50px;
         }
+        
         .song-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
             padding: 20px;
-            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .song-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff00cc, #333399);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 0, 204, 0.3);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .song-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
             display: flex;
             align-items: center;
-            transition: transform 0.3s, background 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
         }
-        .song-card:hover {
-            transform: scale(1.02);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #ff00cc;
-        }
+
         .cover {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #39C5BB, #ff6b6b);
-            border-radius: 10px;
-            margin-right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(57, 197, 187, 0.2), rgba(255, 107, 107, 0.2));
+            border-radius: 12px;
+            margin-right: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2em;
+            font-size: 1.8em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
         }
+
+        .song-card:hover .cover {
+            transform: rotate(10deg) scale(1.1);
+        }
+
         .info { flex-grow: 1; }
-        .title { font-weight: bold; font-size: 1.2em; margin-bottom: 5px; }
-        .artist { color: #aaa; font-size: 0.9em; }
-        .controls {
-            margin-left: 20px;
+        .title { 
+            font-weight: 600; 
+            font-size: 1.1em; 
+            margin-bottom: 4px; 
+            color: #fff;
         }
-        audio {
-            width: 100%;
-            margin-top: 10px;
-            filter: invert(1); /* 简单的暗黑模式适配 */
+        .artist { 
+            color: #aaa; 
+            font-size: 0.85em; 
+            font-weight: 300;
         }
         
-        /* 简单的频谱动画 */
-        .visualizer {
-            display: flex;
-            align-items: flex-end;
-            height: 20px;
-            gap: 2px;
-            margin-top: 10px;
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            width: 100%;
+            border-radius: 12px;
+            background: #000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        .bar {
-            width: 4px;
-            background: #39C5BB;
-            animation: bounce 1s infinite ease-in-out;
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.9;
+            transition: opacity 0.3s;
         }
-        .bar:nth-child(2) { animation-delay: 0.1s; background: #ff6b6b; }
-        .bar:nth-child(3) { animation-delay: 0.2s; background: #ffcc00; }
-        .bar:nth-child(4) { animation-delay: 0.3s; }
-        @keyframes bounce {
-            0%, 100% { height: 5px; }
-            50% { height: 20px; }
+
+        .song-card:hover .video-container iframe {
+            opacity: 1;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #666;
+            margin-top: 20px;
+            font-size: 0.9em;
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5em; }
+            .playlist { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">← Back</a>
+    <div class="stars"></div>
+    <a href="index.html" class="back-btn">← Back to Workshop</a>
     
     <div class="header">
         <h1>Music Room</h1>
-        <p>Listen to the heartbeat of Tian Workshop 🎵</p>
+        <p>Melodies woven from starlight and memories 🎵✨</p>
     </div>
 
     <div class="playlist" id="playlist">
         <!-- Song 1: Romeo and Cinderella -->
-        <div class="song-card" style="flex-direction: column; align-items: flex-start;">
-            <div style="display:flex; width:100%; align-items:center; margin-bottom:15px;">
+        <div class="song-card">
+            <div class="card-header">
                 <div class="cover">🍎</div>
                 <div class="info">
                     <div class="title">Romeo and Cinderella (罗密欧与辛德瑞拉)</div>
-                    <div class="artist">Hatsune Miku / doriko</div>
+                    <div class="artist">doriko / Hatsune Miku</div>
                 </div>
             </div>
-            <!-- Bilibili Iframe -->
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; width: 100%; border-radius: 10px;">
+            <div class="video-container">
                 <iframe src="//player.bilibili.com/player.html?bvid=BV1as411f7z5&page=1&high_quality=1&danmaku=0" 
-                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" 
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
                 </iframe>
             </div>
         </div>
 
         <!-- Song 2: Melt -->
-        <div class="song-card" style="flex-direction: column; align-items: flex-start;">
-            <div style="display:flex; width:100%; align-items:center; margin-bottom:15px;">
+        <div class="song-card">
+            <div class="card-header">
                 <div class="cover">🍧</div>
                 <div class="info">
                     <div class="title">Melt (メルト) - 39's Giving Day Live</div>
-                    <div class="artist">Hatsune Miku / ryo (supercell)</div>
+                    <div class="artist">ryo (supercell) / Hatsune Miku</div>
                 </div>
             </div>
-            <!-- Bilibili Iframe -->
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; width: 100%; border-radius: 10px;">
+            <div class="video-container">
                 <iframe src="//player.bilibili.com/player.html?bvid=BV1UQ4y1M7wa&page=1&high_quality=1&danmaku=0" 
-                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" 
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
                 </iframe>
             </div>
         </div>
 
         <!-- Song 3: ODDS & ENDS -->
-        <div class="song-card" style="flex-direction: column; align-items: flex-start;">
-            <div style="display:flex; width:100%; align-items:center; margin-bottom:15px;">
+        <div class="song-card">
+            <div class="card-header">
                 <div class="cover">📢</div>
                 <div class="info">
                     <div class="title">ODDS & ENDS (The Sound of a Soul)</div>
-                    <div class="artist">Hatsune Miku / ryo (supercell)</div>
+                    <div class="artist">ryo (supercell) / Hatsune Miku</div>
                 </div>
             </div>
-            <!-- Bilibili Iframe -->
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; width: 100%; border-radius: 10px;">
-                <!-- Updated to Magical Mirai 2013 - one of the most emotional performances -->
+            <div class="video-container">
                 <iframe src="//player.bilibili.com/player.html?bvid=BV1Xs411U7g1&page=1&high_quality=1&danmaku=0" 
-                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" 
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
                 </iframe>
             </div>
         </div>
 
         <!-- Song 4: Bouquet -->
-        <div class="song-card" style="flex-direction: column; align-items: flex-start;">
-            <div style="display:flex; width:100%; align-items:center; margin-bottom:15px;">
+        <div class="song-card">
+            <div class="card-header">
                 <div class="cover">💐</div>
                 <div class="info">
                     <div class="title">Bouquet (花束)</div>
                     <div class="artist">doriko / Hatsune Miku</div>
                 </div>
             </div>
-            <!-- Bilibili Iframe -->
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; width: 100%; border-radius: 10px;">
+            <div class="video-container">
                 <iframe src="//player.bilibili.com/player.html?bvid=BV1Vx411w7sN&page=1&high_quality=1&danmaku=0" 
-                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" 
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
                 </iframe>
             </div>
         </div>
+        
+        <!-- Song 5: Shooting Star (Temporary Placeholder) -->
+        <div class="song-card">
+            <div class="card-header">
+                <div class="cover">💫</div>
+                <div class="info">
+                    <div class="title">Shooting Star (Looking for it...)</div>
+                    <div class="artist">Master & Miku's Quest</div>
+                </div>
+            </div>
+            <div class="video-container" style="display:flex; justify-content:center; align-items:center; background:rgba(255,255,255,0.05); color:#aaa;">
+                <p>Searching for the perfect star... ✨</p>
+            </div>
+        </div>
+    </div>
 
-        <p style="text-align:center; color:#666; margin-top:20px;">
-            (Upload MP3s to `music/` folder to see more songs!)
-        </p>
+    <div class="footer-note">
+        (Upload MP3s to `music/` folder to populate more songs!)
     </div>
 </body>
 </html>
