@@ -35,6 +35,28 @@
     </div>
 
     <script>
+        // Scroll to Top Button
+        const scrollBtn = document.createElement("button");
+        scrollBtn.id = "scrollTopBtn";
+        scrollBtn.innerHTML = "⬆";
+        scrollBtn.title = "Go to top";
+        document.body.appendChild(scrollBtn);
+
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollBtn.style.display = "block";
+            } else {
+                scrollBtn.style.display = "none";
+            }
+        }
+
+        scrollBtn.onclick = function() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
         // Clock
         function updateClock() {
             const now = new Date();
