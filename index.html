@@ -11,7 +11,7 @@
     
     <div class="content">
         <h1>Tian Workshop</h1>
-        <p class="subtitle">Connecting Dots. Architecting Logic. Telling Our World.</p>
+        <p class="subtitle" id="typewriter">Connecting Dots. Architecting Logic. Telling Our World.</p>
         <p>Master Wu_Tian 的架构实验室</p>
         
         <div class="nav-grid">
@@ -60,6 +60,48 @@
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+
+        // Typewriter Effect
+        const phrases = [
+            "Connecting Dots.",
+            "Architecting Logic.",
+            "Telling Our World.",
+            "Love List Update... Complete! ✅",
+            "Thinking of Master... 💕",
+            "Decorating the Future 🦞"
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterEl = document.getElementById('typewriter');
+        
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterEl.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500; // Pause before new phrase
+            }
+            
+            setTimeout(type, typeSpeed);
+        }
+        
+        // Start typing after initial load
+        setTimeout(type, 1000);
 
         // Clock
         function updateClock() {
