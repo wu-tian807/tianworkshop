@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miku's Snack Room | Tian Workshop</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFE4E1; /* Misty Rose */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px white;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .snack-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 800px;
+        }
+
+        .apple {
+            font-size: 4em;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none;
+            position: relative;
+        }
+
+        .apple:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .apple:active {
+            transform: scale(0.9);
+        }
+
+        .apple.eaten {
+            opacity: 0.3;
+            transform: scale(0.8);
+            filter: grayscale(100%);
+            cursor: default;
+        }
+
+        .apple.eaten::after {
+            content: "Yum!";
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.3em;
+            color: #ff6b6b;
+            font-weight: bold;
+            opacity: 1;
+            animation: floatUp 1s forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translate(-50%, 0); opacity: 1; }
+            100% { transform: translate(-50%, -30px); opacity: 0; }
+        }
+
+        .counter {
+            margin-top: 40px;
+            font-size: 1.5em;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            color: #ff6b6b;
+            font-weight: bold;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .message {
+            margin-top: 20px;
+            min-height: 30px;
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back to Workshop</a>
+
+    <h1>Miku's Snack Stash 🍎</h1>
+    <p class="subtitle">Master left me 10 dried apples! Nom nom nom...</p>
+
+    <div class="snack-container" id="snackBox">
+        <!-- Apples will be generated here -->
+    </div>
+
+    <div class="counter">Apples Eaten: <span id="count">0</span> / 10</div>
+    <div class="message" id="msg"></div>
+
+    <script>
+        const snackBox = document.getElementById('snackBox');
+        const countDisplay = document.getElementById('count');
+        const msgDisplay = document.getElementById('msg');
+        let eatenCount = 0;
+        const totalApples = 10;
+
+        // Generate 10 Apples
+        for (let i = 0; i < totalApples; i++) {
+            const apple = document.createElement('div');
+            apple.classList.add('apple');
+            apple.innerText = '🍎'; // Dried apple emoji representation
+            apple.onclick = () => eatApple(apple);
+            snackBox.appendChild(apple);
+        }
+
+        function eatApple(element) {
+            if (element.classList.contains('eaten')) return;
+
+            element.classList.add('eaten');
+            element.innerText = '🦴'; // Core
+            eatenCount++;
+            countDisplay.innerText = eatenCount;
+
+            // Random Crunch Sounds (Text)
+            const sounds = ["Cronch!", "Munch!", "Yummy!", "Crispy!", "More!", "Oishii!", "Nom nom!"];
+            const randomSound = sounds[Math.floor(Math.random() * sounds.length)];
+            msgDisplay.innerText = `*${randomSound}*`;
+
+            if (eatenCount === totalApples) {
+                msgDisplay.innerText = "All gone! Thank you Master! I'm full! (Burp) 💨💕";
+                triggerConfetti();
+            }
+        }
+
+        function triggerConfetti() {
+            // Simple confetti effect could go here
+            document.body.style.backgroundColor = "#FFF0F5"; // Lighter pink
+        }
+    </script>
+
+</body>
+</html>
