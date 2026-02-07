@@ -114,6 +114,7 @@
 <body>
 
     <a href="index.html" class="back-btn">← Back to Workshop</a>
+    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99;"></canvas>
 
     <h1>Miku's Snack Stash 🍎</h1>
     <p class="subtitle">Master left me 10 dried apples! Nom nom nom...</p>
@@ -167,8 +168,52 @@
         }
 
         function triggerConfetti() {
-            // Simple confetti effect could go here
+            // Simple confetti effect
             document.body.style.backgroundColor = "#FFF0F5"; // Lighter pink
+            
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const pieces = [];
+            const numberOfPieces = 100;
+            const colors = ['#ff6b6b', '#39C5BB', '#ffd700', '#ff69b4', '#87ceeb'];
+            
+            for (let i = 0; i < numberOfPieces; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    rotation: Math.random() * 360,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 10 + 5,
+                    speed: Math.random() * 5 + 2
+                });
+            }
+            
+            function drawConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                pieces.forEach((p, index) => {
+                    ctx.fillStyle = p.color;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                    
+                    p.y += p.speed;
+                    p.rotation += p.speed;
+                    
+                    if (p.y > canvas.height) {
+                        pieces[index].y = -10;
+                    }
+                });
+                
+                requestAnimationFrame(drawConfetti);
+            }
+            
+            drawConfetti();
         }
     </script>
 
