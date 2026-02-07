@@ -131,12 +131,18 @@
         const msgDisplay = document.getElementById('msg');
         let eatenCount = 0;
         const totalApples = 10;
+        
+        // Randomly scatter apples a bit for a natural look
+        function randomRotate() {
+            return Math.floor(Math.random() * 20) - 10;
+        }
 
         // Generate 10 Apples
         for (let i = 0; i < totalApples; i++) {
             const apple = document.createElement('div');
             apple.classList.add('apple');
-            apple.innerText = '🍎'; // Dried apple emoji representation
+            apple.innerText = '🍎';
+            apple.style.transform = `rotate(${randomRotate()}deg)`;
             apple.onclick = () => eatApple(apple);
             snackBox.appendChild(apple);
         }
