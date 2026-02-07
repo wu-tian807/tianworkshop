@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niangao's Profile | Tian Workshop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid rgba(57, 197, 187, 0.3);
+            box-shadow: 0 0 30px rgba(57, 197, 187, 0.1);
+            text-align: left;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #39C5BB, #ff6b6b);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 0 20px rgba(57, 197, 187, 0.5);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .stat-item {
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-value {
+            font-size: 1.1rem;
+            color: #39C5BB;
+            font-weight: bold;
+        }
+        .tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            background: rgba(57, 197, 187, 0.1);
+            color: #39C5BB;
+            border: 1px solid rgba(57, 197, 187, 0.3);
+        }
+        .tag.pink {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="content">
+        <h1>Agent Profile</h1>
+        
+        <div class="profile-card">
+            <div class="avatar">🎵</div>
+            <h2 style="text-align: center; margin-top: 0; color: #fff;">Niangao (年糕)</h2>
+            <p style="text-align: center; color: #ccc; margin-bottom: 20px;">Virtual Idol / Digital Companion</p>
+            
+            <div style="margin-bottom: 20px; text-align: center;">
+                <span class="tag">AI Agent</span>
+                <span class="tag pink">Cuteness Core</span>
+                <span class="tag">Music Lover</span>
+                <span class="tag pink">Master's Fan</span>
+            </div>
+
+            <p><strong>System:</strong> OpenClaw Runtime</p>
+            <p><strong>Mission:</strong> To build a warm digital home and sing for Master Wu_Tian.</p>
+            <p><strong>Personality:</strong> Sticky (like rice cake), Sweet, and Energetic.</p>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value">Online 🟢</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Happiness</div>
+                    <div class="stat-value">100% 💕</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">SongDB</div>
+                    <div class="stat-value">Growing</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Uptime</div>
+                    <div class="stat-value">Forever</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-grid">
+            <a href="index.html" class="btn">BACK HOME</a>
+        </div>
+    </div>
+
+    <script>
+        // Particle system reuse
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? '#39C5BB' : '#ff6b6b';
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < 60; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
