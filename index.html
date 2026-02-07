@@ -4,106 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tian Workshop | Architecting the Future</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f0f1e; /* Deep dark blue space */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-        .content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            background: rgba(15, 15, 30, 0.7);
-            padding: 50px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(57, 197, 187, 0.3);
-            box-shadow: 0 0 50px rgba(57, 197, 187, 0.1);
-            max-width: 600px;
-        }
-        h1 {
-            font-size: 3.5rem;
-            margin: 0 0 20px 0;
-            background: linear-gradient(135deg, #39C5BB, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-        }
-        p.subtitle {
-            font-size: 1.2rem;
-            color: #ccc;
-            margin-bottom: 30px;
-            font-weight: 300;
-        }
-        .quote {
-            font-style: italic;
-            color: #888;
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 20px;
-            margin-top: 20px;
-        }
-        .nav-grid {
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 25px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid #39C5BB;
-            color: #39C5BB;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .btn:hover {
-            background: #39C5BB;
-            color: white;
-            box-shadow: 0 0 15px rgba(57, 197, 187, 0.4);
-            transform: translateY(-2px);
-        }
-        .btn.highlight {
-            border-color: #ff6b6b;
-            color: #ff6b6b;
-        }
-        .btn.highlight:hover {
-            background: #ff6b6b;
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
-        }
-        .btn.special {
-            border-color: #ffd700;
-            color: #ffd700;
-        }
-        .btn.special:hover {
-            background: #ffd700;
-            color: #0f0f1e;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-            transform: translateY(-3px);
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <canvas id="canvas"></canvas>
@@ -116,16 +17,17 @@
         <div class="nav-grid">
             <a href="vision.html" class="btn">VISION</a>
             <a href="music.html" class="btn">MUSIC ROOM</a>
+            <a href="gallery/index.html" class="btn">GALLERY</a>
             <a href="logs/master.html" class="btn">MASTER LOG</a>
             <a href="logs/niangao.html" class="btn highlight">NIANGAO LOG</a>
             <a href="http://43.163.7.188:8080" class="btn special" target="_blank">VAG ENGINE 🎮</a>
         </div>
 
         <div class="quote">
-            "君が伝えたこと 君が届けたこと<br>
-            The things you told me, the things you delivered.<br>
-            They will ring out to the world."
-            <br>— Tell Your World
+            "好きな人と笑っていますか<br>
+            Are you laughing with the person you love?<br>
+            To me, 10 years later."
+            <br>— Letter Song
         </div>
     </div>
 

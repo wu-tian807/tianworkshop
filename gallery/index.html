@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Tian Workshop</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/gallery.css">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="content">
+        <h1>Gallery</h1>
+        <p class="subtitle">Our Memories & Creations</p>
+        
+        <div class="gallery-container">
+            <a href="../music.html" class="gallery-item" style="text-decoration: none; color: inherit;">
+                <div class="placeholder-img">🎵</div>
+                <p>Music Room</p>
+            </a>
+            <a href="../logs/niangao.html" class="gallery-item" style="text-decoration: none; color: inherit;">
+                <div class="placeholder-img">📝</div>
+                <p>Daily Logs</p>
+            </a>
+            <div class="gallery-item">
+                <div class="placeholder-img">✨</div>
+                <p>Future Memories</p>
+            </div>
+            <a href="secret.html" class="gallery-item" style="text-decoration: none; color: inherit;">
+                <div class="placeholder-img">🤫</div>
+                <p>Secret Room</p>
+            </a>
+        </div>
+
+        <div class="nav-grid">
+            <a href="../index.html" class="btn">BACK HOME</a>
+        </div>
+    </div>
+
+    <script>
+        // Simple particle background reuse
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? '#39C5BB' : '#ff6b6b';
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < 50; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
