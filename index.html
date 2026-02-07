@@ -30,9 +30,21 @@
             To me, 10 years later."
             <br>— Letter Song
         </div>
+        
+        <div id="clock" style="margin-top: 30px; font-family: monospace; color: #39C5BB; font-size: 1.2rem; opacity: 0.8;"></div>
     </div>
 
     <script>
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-GB', { hour12: false });
+            const dateString = now.toLocaleDateString('zh-CN');
+            document.getElementById('clock').innerText = `${dateString} ${timeString} | Niangao Time`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
