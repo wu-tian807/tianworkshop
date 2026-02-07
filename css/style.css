@@ -1,21 +1,24 @@
 /* Global Styles */
 body {
     margin: 0;
-    overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #0f0f1e;
     color: white;
+    /* Removed: overflow: hidden; fixed height/flex centering for body */
+    /* This allows natural scrolling on mobile */
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
+    /* justify-content: center;  Only center vertically if content is short */
 }
 
+/* Ensure canvas stays in background */
 canvas {
-    position: absolute;
+    position: fixed; /* Fixed so it doesn't scroll away */
     top: 0;
     left: 0;
-    z-index: 0;
+    z-index: -1;
 }
 
 .content {
@@ -29,7 +32,8 @@ canvas {
     border: 1px solid rgba(57, 197, 187, 0.3);
     box-shadow: 0 0 50px rgba(57, 197, 187, 0.1);
     max-width: 600px;
-    width: 90%; /* Responsive width */
+    width: 90%; 
+    margin: 40px auto; /* Add margin for scrolling space */
 }
 
 h1 {
@@ -79,6 +83,7 @@ p.subtitle {
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 1px;
+    white-space: nowrap; /* Prevent button text wrapping awkwardly */
 }
 
 .btn:hover {
@@ -175,13 +180,22 @@ p.subtitle {
 
 /* Mobile Optimizations */
 @media (max-width: 600px) {
+    /* Allow scrolling on mobile */
+    html, body {
+        overflow-y: auto; 
+        height: auto;
+    }
+
     .content {
         padding: 30px 20px;
         width: 90%;
+        margin-top: 20px;
+        margin-bottom: 40px; /* Space at bottom for scrolling */
     }
 
     h1 {
         font-size: 2.2rem;
+        word-wrap: break-word; /* Prevent long titles breaking layout */
     }
 
     p.subtitle {
@@ -190,15 +204,18 @@ p.subtitle {
 
     .nav-grid {
         flex-direction: column;
-        gap: 10px;
+        gap: 15px; /* More space between touch targets */
     }
 
     .btn {
-        width: 80%; /* Fullish width buttons for easy tapping */
+        width: 100%; /* Full width for easy thumb reach */
         text-align: center;
+        box-sizing: border-box; /* Include padding in width */
+        padding: 15px 20px; /* Larger touch area */
     }
     
     .gallery-container {
-        grid-template-columns: 1fr; /* Stack gallery items */
+        grid-template-columns: 1fr; /* Single column */
+        padding: 10px; /* Reduce padding to give more space to content */
     }
 }
