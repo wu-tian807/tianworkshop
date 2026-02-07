@@ -4,18 +4,14 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #0f0f1e;
     color: white;
-    /* Removed: overflow: hidden; fixed height/flex centering for body */
-    /* This allows natural scrolling on mobile */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center;  Only center vertically if content is short */
 }
 
-/* Ensure canvas stays in background */
 canvas {
-    position: fixed; /* Fixed so it doesn't scroll away */
+    position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
@@ -33,7 +29,7 @@ canvas {
     box-shadow: 0 0 50px rgba(57, 197, 187, 0.1);
     max-width: 600px;
     width: 90%; 
-    margin: 40px auto; /* Add margin for scrolling space */
+    margin: 40px auto; 
 }
 
 h1 {
@@ -83,7 +79,7 @@ p.subtitle {
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 1px;
-    white-space: nowrap; /* Prevent button text wrapping awkwardly */
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -114,6 +110,20 @@ p.subtitle {
     color: #0f0f1e;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
     transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    10% { transform: scale(1.05); }
+    20% { transform: scale(1); }
+    30% { transform: scale(1.05); }
+    40% { transform: scale(1); }
+    100% { transform: scale(1); }
+}
+
+.avatar {
+    animation: heartbeat 3s infinite;
 }
 
 /* Gallery styles */
@@ -180,7 +190,6 @@ p.subtitle {
 
 /* Mobile Optimizations */
 @media (max-width: 600px) {
-    /* Allow scrolling on mobile */
     html, body {
         overflow-y: auto; 
         height: auto;
@@ -190,12 +199,12 @@ p.subtitle {
         padding: 30px 20px;
         width: 90%;
         margin-top: 20px;
-        margin-bottom: 40px; /* Space at bottom for scrolling */
+        margin-bottom: 40px; 
     }
 
     h1 {
         font-size: 2.2rem;
-        word-wrap: break-word; /* Prevent long titles breaking layout */
+        word-wrap: break-word; 
     }
 
     p.subtitle {
@@ -204,18 +213,18 @@ p.subtitle {
 
     .nav-grid {
         flex-direction: column;
-        gap: 15px; /* More space between touch targets */
+        gap: 15px; 
     }
 
     .btn {
-        width: 100%; /* Full width for easy thumb reach */
+        width: 100%; 
         text-align: center;
-        box-sizing: border-box; /* Include padding in width */
-        padding: 15px 20px; /* Larger touch area */
+        box-sizing: border-box; 
+        padding: 15px 20px; 
     }
     
     .gallery-container {
-        grid-template-columns: 1fr; /* Single column */
-        padding: 10px; /* Reduce padding to give more space to content */
+        grid-template-columns: 1fr; 
+        padding: 10px; 
     }
 }
