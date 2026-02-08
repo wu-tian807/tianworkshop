@@ -13,9 +13,10 @@
             border-radius: 10px;
             padding: 10px;
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         .gallery-item::before {
             content: '';
@@ -33,6 +34,7 @@
             transform: rotate(45deg);
             transition: transform 0.5s;
             opacity: 0;
+            pointer-events: none;
         }
         .gallery-item:hover::before {
             opacity: 1;
@@ -41,5 +43,6 @@
         .gallery-item:hover {
             transform: scale(1.05);
             background: rgba(57, 197, 187, 0.1);
-            box-shadow: 0 0 20px rgba(57, 197, 187, 0.2);
+            border-color: rgba(255, 107, 107, 0.6); /* Morning sun accent */
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.3);
         }
