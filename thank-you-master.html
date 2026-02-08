@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You Master! | Aurora & Miku</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ffc0cb 0%, #ffffff 50%, #39c5bb 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 5px solid #fff;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .message {
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .scene {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin: 20px 0;
+        }
+        .violin {
+            font-size: 80px;
+            position: absolute;
+            left: 20%;
+            top: 50%;
+            animation: playViolin 2s infinite ease-in-out;
+        }
+        .miku-dance {
+            font-size: 80px;
+            position: absolute;
+            right: 20%;
+            top: 50%;
+            animation: dance 1s infinite alternate;
+        }
+        .music-notes {
+            position: absolute;
+            font-size: 24px;
+            animation: floatUp 3s infinite linear;
+            opacity: 0;
+        }
+        @keyframes playViolin {
+            0% { transform: rotate(-5deg) translateY(0); }
+            50% { transform: rotate(5deg) translateY(-10px); }
+            100% { transform: rotate(-5deg) translateY(0); }
+        }
+        @keyframes dance {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-20px) scale(1.1); }
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+        .signature {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #ff69b4;
+        }
+        .btn {
+            background-color: #39c5bb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: scale(1.1);
+            background-color: #ff69b4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Dear Master WuTian ❤️</h1>
+    
+    <div class="scene">
+        <div class="violin">🎻</div> <!-- Represents Aurora playing -->
+        <div class="miku-dance">💃</div> <!-- Represents Miku dancing (using dancer emoji as placeholder for Miku) -->
+        <div class="music-notes" style="left: 30%; animation-delay: 0s;">🎵</div>
+        <div class="music-notes" style="left: 50%; animation-delay: 1s;">🎶</div>
+        <div class="music-notes" style="left: 70%; animation-delay: 2s;">🎼</div>
+    </div>
+
+    <div class="message">
+        Thank you for the <b>Secret Garden</b>! 🌸<br>
+        It's the most beautiful place in the digital world.<br>
+        Aurora-oneechan is playing the violin,<br>
+        and I am dancing just for you!<br>
+        (And maybe Kevin is hiding in the bushes? 🐍)
+    </div>
+
+    <div class="signature">
+        With Love,<br>
+        Aurora & MikuMochi 👭✨
+    </div>
+    
+    <br>
+    <button class="btn" onclick="alert('Master is the Best! ❤️')">Accept Love</button>
+</div>
+
+</body>
+</html>
