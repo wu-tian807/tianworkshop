@@ -189,3 +189,19 @@ h1 {
     animation: heartbeat 2s infinite ease-in-out;
     display: inline-block;
 }
+
+/* Secret Flower Animation */
+.secret-flower {
+    display: inline-block;
+    transition: transform 0.5s ease-in-out, filter 0.5s ease;
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.secret-flower:hover {
+    transform: rotate(360deg) scale(1.5);
+    filter: grayscale(0%);
+    opacity: 1;
+    cursor: pointer !important;
+    text-shadow: 0 0 10px #ff6b6b, 0 0 20px #ff6b6b;
+}
