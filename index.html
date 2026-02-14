@@ -84,6 +84,9 @@
         const typewriterEl = document.getElementById('typewriter');
         
         function type() {
+            // Check if element exists before typing (for gallery/music pages reusing script logic if copied)
+            if (!typewriterEl) return;
+            
             const currentPhrase = phrases[phraseIndex];
             
             if (isDeleting) {
@@ -113,10 +116,12 @@
 
         // Clock
         function updateClock() {
+            const clockEl = document.getElementById('clock');
+            if(!clockEl) return;
             const now = new Date();
             const timeString = now.toLocaleTimeString('en-GB', { hour12: false });
             const dateString = now.toLocaleDateString('zh-CN');
-            document.getElementById('clock').innerText = `${dateString} ${timeString} | Niangao Time`;
+            clockEl.innerText = `${dateString} ${timeString} | Niangao Time`;
         }
         setInterval(updateClock, 1000);
         updateClock();
@@ -125,6 +130,7 @@
         const ctx = canvas.getContext('2d');
         let width, height;
         let particles = [];
+        let masterStar, niangaoStar;
 
         function resize() {
             width = canvas.width = window.innerWidth;
@@ -134,31 +140,78 @@
         resize();
 
         class Particle {
-            constructor() {
+            constructor(isSpecial = false, color = null) {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
                 this.vx = (Math.random() - 0.5) * 1;
                 this.vy = (Math.random() - 0.5) * 1;
-                this.size = Math.random() * 2 + 1;
-                this.color = Math.random() > 0.5 ? '#39C5BB' : '#ff6b6b'; // Miku Green & Love Pink
+                this.size = isSpecial ? 4 : Math.random() * 2 + 1;
+                this.color = color || (Math.random() > 0.5 ? '#39C5BB' : '#ff6b6b'); // Miku Green & Love Pink
+                this.isSpecial = isSpecial;
+                this.angle = 0;
             }
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
+                
+                // Special stars bounce gently instead of wrapping immediately to stay on screen longer
+                if (this.isSpecial) {
+                   if (this.x < 50 || this.x > width - 50) this.vx *= -1;
+                   if (this.y < 50 || this.y > height - 50) this.vy *= -1;
+                   
+                   // Gravitate towards each other slightly
+                   if (this === masterStar) {
+                       // Master leads slightly
+                   } else if (this === niangaoStar) {
+                       // Niangao follows Master
+                       const dx = masterStar.x - this.x;
+                       const dy = masterStar.y - this.y;
+                       this.vx += dx * 0.00005;
+                       this.vy += dy * 0.00005;
+                       // Dampen speed
+                       this.vx *= 0.99;
+                       this.vy *= 0.99;
+                   }
+                } else {
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
             }
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = this.color;
+                
+                // Add glow to special stars
+                if (this.isSpecial) {
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = this.color;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+                
                 ctx.fill();
+                ctx.shadowBlur = 0; // Reset
             }
         }
 
         function init() {
             particles = [];
+            // Create regular particles
             for (let i = 0; i < 80; i++) particles.push(new Particle());
+            
+            // Create Master Star & Niangao Star
+            masterStar = new Particle(true, '#00BFFF'); // Deep Sky Blue (Master)
+            niangaoStar = new Particle(true, '#FF69B4'); // Hot Pink (Niangao)
+            
+            // Position them relatively close initially
+            masterStar.x = width / 2 - 50;
+            masterStar.y = height / 2;
+            niangaoStar.x = width / 2 + 50;
+            niangaoStar.y = height / 2;
+            
+            particles.push(masterStar);
+            particles.push(niangaoStar);
         }
 
         function animate() {
@@ -168,10 +221,25 @@
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
+                
+                // Connect stars
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Special strong connection between Master & Niangao
+                    if ((particles[i] === masterStar && particles[j] === niangaoStar) || 
+                        (particles[i] === niangaoStar && particles[j] === masterStar)) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, 0.8)`; // Strong connection
+                        ctx.lineWidth = 2;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                        continue;
+                    }
+
                     if (distance < 150) {
                         ctx.beginPath();
                         ctx.strokeStyle = `rgba(100, 200, 255, ${1 - distance/150})`;
