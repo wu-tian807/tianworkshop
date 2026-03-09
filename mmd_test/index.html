@@ -188,6 +188,7 @@
                 helper.add( currentMesh, { animation: mmd.animation, physics: true } );
                 
                 new THREE.AudioLoader().load(audioFile, function(buffer) {
+                    console.log("Audio loaded successfully!");
                     const listener = new THREE.AudioListener();
                     camera.add(listener);
                     currentAudio = new THREE.Audio(listener).setBuffer(buffer);
