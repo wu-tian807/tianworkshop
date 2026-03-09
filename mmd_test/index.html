@@ -108,17 +108,24 @@
 
         const models = {
             classic: '../assets/mmd/models/classic_miku/miku_v2.pmd',
-            custom: '../assets/mmd/models/Hatsune Miku_by_Boku_Wa_Luka_d3b0d4feb93bae4413b4c2a05c0aee86/Hatsune Miku.pmx' // Master 上传的本地自定义模型
+            custom: '../assets/mmd/models/custom_miku/Hatsune Miku.pmx' // Master 上传的本地自定义模型
         };
 
         const vmdFile = '../assets/mmd/motions/wavefile_v2.vmd';
         const audioFile = '../assets/mmd/audios/wavefile_short.mp3';
 
+        // 读取本地存储中的记录，如果没有则默认使用 'classic'
+        const lastSelectedModel = localStorage.getItem('mmd_selected_model') || 'classic';
+
         // 等待物理引擎加载
         Ammo().then(function(AmmoLib) {
             Ammo = AmmoLib;
             init();
-            loadMMD(models.classic);
+            
+            // 将下拉框设置为上次选中的值
+            modelSelect.value = lastSelectedModel;
+            // 初始化只加载当前选中的模型（懒加载）
+            loadMMD(models[lastSelectedModel]);
             animate();
         });
 
@@ -155,7 +162,10 @@
             btnPlay.addEventListener('click', togglePlay);
             btnReset.addEventListener('click', resetAnimation);
             modelSelect.addEventListener('change', (e) => {
-                loadMMD(models[e.target.value]);
+                const selectedKey = e.target.value;
+                // 每次切换时，记住用户的选择
+                localStorage.setItem('mmd_selected_model', selectedKey);
+                loadMMD(models[selectedKey]);
             });
         }
 
@@ -169,10 +179,25 @@
                 if(currentMesh && helper.meshes && helper.meshes.includes(currentMesh)) {
                     scene.remove(currentMesh);
                     helper.remove(currentMesh);
+                    
+                    // Stop animation and physics for the old mesh before disposing
+                    currentMesh.geometry.dispose();
+                    if (Array.isArray(currentMesh.material)) {
+                        currentMesh.material.forEach(m => m.dispose());
+                    } else {
+                        currentMesh.material.dispose();
+                    }
                 }
-                if(currentAudio && helper.audio && helper.audio === currentAudio) {
+                
+                // 完全清理旧的音频对象，防止重音
+                if(currentAudio) {
+                    if(currentAudio.isPlaying) currentAudio.stop();
                     scene.remove(currentAudio);
-                    helper.remove(currentAudio);
+                    if (helper.audio && helper.audio === currentAudio) {
+                         helper.remove(currentAudio);
+                    }
+                    currentAudio.disconnect();
+                    currentAudio = null;
                 }
             }
 
