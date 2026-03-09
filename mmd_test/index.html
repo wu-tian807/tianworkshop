@@ -208,6 +208,22 @@
             loader.loadWithAnimation( modelUrl, vmdFile, function ( mmd ) {
                 console.log("Model and animation loaded successfully!");
                 currentMesh = mmd.mesh;
+                
+                // Disable frustum culling to prevent geometry disappearing when camera moves
+                currentMesh.frustumCulled = false;
+                
+                // Ensure materials render correctly on both sides to prevent invisible polygons
+                if (Array.isArray(currentMesh.material)) {
+                    currentMesh.material.forEach(m => {
+                        m.side = THREE.DoubleSide;
+                        // Some custom models have weird alpha test values that clip out faces/eyes
+                        if(m.alphaTest > 0) m.alphaTest = 0.5; 
+                    });
+                } else {
+                    currentMesh.material.side = THREE.DoubleSide;
+                    if(currentMesh.material.alphaTest > 0) currentMesh.material.alphaTest = 0.5;
+                }
+
                 currentMesh.position.y = -10;
                 scene.add( currentMesh );
                 helper.add( currentMesh, { 
