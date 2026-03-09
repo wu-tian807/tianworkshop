@@ -107,12 +107,12 @@
         let isReady = false;
 
         const models = {
-            classic: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/miku/miku_v2.pmd',
+            classic: '../assets/mmd/miku_v2.pmd',
             custom: '../assets/mmd/miku_custom.pmx' // Master 上传的本地自定义模型
         };
 
-        const vmdFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/vmds/wavefile_v2.vmd';
-        const audioFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/audios/wavefile_short.mp3';
+        const vmdFile = '../assets/mmd/wavefile_v2.vmd';
+        const audioFile = '../assets/mmd/wavefile_short.mp3';
 
         // 等待物理引擎加载
         Ammo().then(function(AmmoLib) {
