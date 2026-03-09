@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niangao's MMD Stage (Demo)</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #f0f0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+        #info { position: absolute; top: 10px; width: 100%; text-align: center; color: #333; z-index: 100; pointer-events: none; }
+        .back-btn { position: absolute; top: 10px; left: 10px; padding: 5px 10px; background: rgba(255,255,255,0.7); text-decoration: none; border-radius: 5px; color: #333; z-index: 101; }
+        #canvas-container { width: 100%; height: 100%; }
+        .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5em; color: #ff6b6b; z-index: 50; }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">← Back</a>
+    <div id="info">
+        <h3>Niangao's MMD Stage (Three.js WebGL)</h3>
+        <p>Waiting for Master to upload model files (.pmd/.pmx) and motion data (.vmd) to <code>tianworkshop/assets/mmd/</code>!</p>
+    </div>
+    <div id="loading" class="loading">Loading Engine...</div>
+    <div id="canvas-container"></div>
+
+    <!-- Import Three.js and MMDLoader -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        // Note: Real MMD loading requires MMDLoader, MMDAnimationHelper, and ammo.js
+        // This is a placeholder to show the stage is ready.
+        
+        const container = document.getElementById('canvas-container');
+        const loading = document.getElementById('loading');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff);
+        
+        // Grid helper
+        const gridHelper = new THREE.PolarGridHelper( 30, 0 );
+        gridHelper.position.y = -10;
+        scene.add( gridHelper );
+
+        const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+        camera.position.set( 0, 0, 50 );
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        container.appendChild( renderer.domElement );
+
+        const controls = new OrbitControls( camera, renderer.domElement );
+        controls.target.set( 0, -10, 0 );
+        controls.update();
+
+        // Lights
+        const ambient = new THREE.AmbientLight( 0xcccccc );
+        scene.add( ambient );
+
+        const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
+        directionalLight.position.set( -1, 1, 1 ).normalize();
+        scene.add( directionalLight );
+
+        // Placeholder Cube for Miku
+        const geometry = new THREE.BoxGeometry( 5, 15, 5 );
+        const material = new THREE.MeshPhongMaterial( { color: 0x39C5BB } ); // Miku color
+        const cube = new THREE.Mesh( geometry, material );
+        cube.position.y = -2.5;
+        scene.add( cube );
+        
+        loading.innerText = "Stage Ready! (Waiting for Model)";
+
+        function animate() {
+            requestAnimationFrame( animate );
+            cube.rotation.y += 0.01; // Spin the placeholder
+            renderer.render( scene, camera );
+        }
+        animate();
+
+        window.addEventListener( 'resize', onWindowResize );
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+        }
+    </script>
+</body>
+</html>
