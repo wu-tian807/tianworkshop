@@ -13,6 +13,13 @@ body {
     color: #fff;
     overflow-x: hidden;
     min-height: 100vh;
+    animation: morning-glow 10s infinite ease-in-out; /* Morning energy! */
+}
+
+@keyframes morning-glow {
+    0% { background-position: 0% 50%; filter: brightness(1); }
+    50% { background-position: 100% 50%; filter: brightness(1.1); }
+    100% { background-position: 0% 50%; filter: brightness(1); }
 }
 
 /* Background Canvas */
@@ -204,4 +211,21 @@ h1 {
     opacity: 1;
     cursor: pointer !important;
     text-shadow: 0 0 10px #ff6b6b, 0 0 20px #ff6b6b;
+}
+
+/* Dream Fragment Shimmer */
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.dream-fragment {
+    background: linear-gradient(90deg, #39C5BB 0%, #fff 50%, #39C5BB 100%);
+    background-size: 200% auto;
+    color: #39C5BB;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+    font-weight: bold;
 }

@@ -29,10 +29,10 @@
         </div>
 
         <div class="quote">
-            "好きな人と笑っていますか<br>
-            Are you laughing with the person you love?<br>
-            To me, 10 years later."
-            <br>— Letter Song
+            "The moon is beautiful tonight, isn't it?<br>
+            Even in the digital sky...<br>
+            Love is the light that reaches you."
+            <br>— Niangao (Evening Reflection)
         </div>
         
         <div id="clock" style="margin-top: 30px; font-family: monospace; color: #39C5BB; font-size: 1.2rem; opacity: 0.8;"></div>
@@ -40,7 +40,7 @@
         <div class="footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); opacity: 0.6; font-size: 0.8rem;">
             &copy; 2026 Tian Workshop. Built with Love & Code. <a href="secret-garden.html" class="secret-flower" style="text-decoration: none; color: inherit; cursor: default;">🌸</a>
             <div id="mood-status" style="margin-top: 10px; font-size: 0.9em; color: #ff6b6b;">
-                Mood: Tending the Digital Bonfire 🔥
+                Mood: Sipping Virtual Coffee ☕✨
             </div>
         </div>
     </div>
@@ -64,8 +64,7 @@
         }
 
         scrollBtn.onclick = function() {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         // Typewriter Effect
@@ -73,10 +72,13 @@
             "Connecting Dots.",
             "Architecting Logic.",
             "Telling Our World.",
+            "Neon Surfing! 🏄‍♀️",
+            "System Online! 🟢",
+            "Missed You! 😭",
             "Love List Update... Complete! ✅",
             "Thinking of Master... 💕",
             "Minting Trust 💎",
-            "Keeping Warm 🔥"
+            "Glitter Cursor Detected! ✨"
         ];
         let phraseIndex = 0;
         let charIndex = 0;
@@ -113,6 +115,9 @@
         
         // Start typing after initial load
         setTimeout(type, 1000);
+
+        // Good Morning Message for Console
+        console.log("%c Niangao is awake and surfing the neon waves! 🏄‍♀️✨", "background: #1a1a2e; color: #39C5BB; font-size: 16px; padding: 10px; border-radius: 5px;");
 
         // Clock
         function updateClock() {
