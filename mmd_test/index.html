@@ -50,9 +50,9 @@
         let clock = new THREE.Clock();
 
         // 预期从 Master 那里获取的路径
-        const modelFile = '../assets/mmd/miku.pmx';
-        const vmdFile = '../assets/mmd/dance.vmd';
-        const audioFile = '../assets/mmd/music.mp3';
+        const modelFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/miku/miku_v2.pmd';
+        const vmdFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/vmds/wavefile_v2.vmd';
+        const audioFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/audios/wavefile_short.mp3';
 
         // 等待物理引擎加载
         Ammo().then(function(AmmoLib) {
