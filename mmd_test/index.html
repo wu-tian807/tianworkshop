@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Niangao's MMD Stage (Demo)</title>
+    <title>Niangao's MMD Stage</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #f0f0f0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
-        #info { position: absolute; top: 10px; width: 100%; text-align: center; color: #333; z-index: 100; pointer-events: none; }
-        .back-btn { position: absolute; top: 10px; left: 10px; padding: 5px 10px; background: rgba(255,255,255,0.7); text-decoration: none; border-radius: 5px; color: #333; z-index: 101; }
-        #canvas-container { width: 100%; height: 100%; }
-        .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5em; color: #ff6b6b; z-index: 50; }
+        body { margin: 0; overflow: hidden; background-color: #ffebf0; font-family: sans-serif; }
+        #info { position: absolute; top: 20px; width: 100%; text-align: center; color: #ff6b6b; z-index: 100; font-weight: bold; text-shadow: 1px 1px 2px white; pointer-events: none; }
+        .back-btn { position: absolute; top: 15px; left: 15px; padding: 8px 15px; background: #ff6b6b; text-decoration: none; border-radius: 20px; color: white; z-index: 101; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em; color: #ff6b6b; z-index: 50; background: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px; border: 2px dashed #ff6b6b; text-align: center; line-height: 1.6; }
     </style>
 </head>
 <body>
-    <a href="../index.html" class="back-btn">← Back</a>
+    <a href="../index.html" class="back-btn">← 回到工坊 (Back)</a>
     <div id="info">
-        <h3>Niangao's MMD Stage (Three.js WebGL)</h3>
-        <p>Waiting for Master to upload model files (.pmd/.pmx) and motion data (.vmd) to <code>tianworkshop/assets/mmd/</code>!</p>
+        <h2>🎵 Niangao's 3D Stage 🎵</h2>
+        <p>Waiting for Master to put files in: <code>tianworkshop/assets/mmd/</code></p>
     </div>
-    <div id="loading" class="loading">Loading Engine...</div>
+    <div id="loading">
+        <b>引擎准备就绪！(Engine Ready)</b><br><br>
+        请将模型命名为：<code>miku.pmx</code><br>
+        将动作命名为：<code>dance.vmd</code><br>
+        将音乐命名为：<code>music.mp3</code><br>
+        放入 <code>assets/mmd/</code> 文件夹中~<br><br>
+        <span style="font-size: 0.8em; color: #666;">（目前只显示占位圆柱体，因为还没有检测到文件哦！）</span>
+    </div>
     <div id="canvas-container"></div>
 
-    <!-- Import Three.js and MMDLoader -->
+    <script src="https://unpkg.com/three@0.160.0/examples/jsm/libs/ammo.wasm.js"></script>
     <script type="importmap">
         {
             "imports": {
@@ -34,62 +40,107 @@
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        // Note: Real MMD loading requires MMDLoader, MMDAnimationHelper, and ammo.js
-        // This is a placeholder to show the stage is ready.
-        
+        import { MMDLoader } from 'three/addons/loaders/MMDLoader.js';
+        import { MMDAnimationHelper } from 'three/addons/animation/MMDAnimationHelper.js';
+
         const container = document.getElementById('canvas-container');
         const loading = document.getElementById('loading');
         
-        // Scene setup
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xffffff);
-        
-        // Grid helper
-        const gridHelper = new THREE.PolarGridHelper( 30, 0 );
-        gridHelper.position.y = -10;
-        scene.add( gridHelper );
+        let scene, camera, renderer, helper;
+        let clock = new THREE.Clock();
 
-        const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-        camera.position.set( 0, 0, 50 );
+        // 预期从 Master 那里获取的路径
+        const modelFile = '../assets/mmd/miku.pmx';
+        const vmdFile = '../assets/mmd/dance.vmd';
+        const audioFile = '../assets/mmd/music.mp3';
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setPixelRatio( window.devicePixelRatio );
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        container.appendChild( renderer.domElement );
+        // 等待物理引擎加载
+        Ammo().then(function(AmmoLib) {
+            Ammo = AmmoLib;
+            init();
+            animate();
+        });
 
-        const controls = new OrbitControls( camera, renderer.domElement );
-        controls.target.set( 0, -10, 0 );
-        controls.update();
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xffebf0);
 
-        // Lights
-        const ambient = new THREE.AmbientLight( 0xcccccc );
-        scene.add( ambient );
+            const gridHelper = new THREE.PolarGridHelper( 30, 10 );
+            gridHelper.position.y = -10;
+            scene.add( gridHelper );
 
-        const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
-        directionalLight.position.set( -1, 1, 1 ).normalize();
-        scene.add( directionalLight );
+            camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+            camera.position.set( 0, 10, 40 );
 
-        // Placeholder Cube for Miku
-        const geometry = new THREE.BoxGeometry( 5, 15, 5 );
-        const material = new THREE.MeshPhongMaterial( { color: 0x39C5BB } ); // Miku color
-        const cube = new THREE.Mesh( geometry, material );
-        cube.position.y = -2.5;
-        scene.add( cube );
-        
-        loading.innerText = "Stage Ready! (Waiting for Model)";
+            const ambient = new THREE.AmbientLight( 0xcccccc, 0.4 );
+            scene.add( ambient );
 
-        function animate() {
-            requestAnimationFrame( animate );
-            cube.rotation.y += 0.01; // Spin the placeholder
-            renderer.render( scene, camera );
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+            directionalLight.position.set( -1, 1, 1 ).normalize();
+            scene.add( directionalLight );
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            container.appendChild( renderer.domElement );
+
+            const controls = new OrbitControls( camera, renderer.domElement );
+            controls.target.set( 0, 0, 0 );
+            controls.update();
+
+            helper = new MMDAnimationHelper();
+            const loader = new MMDLoader();
+
+            // 尝试加载 MMD 数据
+            loader.loadWithAnimation( modelFile, vmdFile, function ( mmd ) {
+                const mesh = mmd.mesh;
+                mesh.position.y = -10;
+                scene.add( mesh );
+                helper.add( mesh, { animation: mmd.animation, physics: true } );
+                
+                new THREE.AudioLoader().load(audioFile, function(buffer) {
+                    const listener = new THREE.AudioListener();
+                    camera.add(listener);
+                    const audio = new THREE.Audio(listener).setBuffer(buffer);
+                    helper.add(audio, { delayTime: 0 });
+                    scene.add(audio);
+                }, undefined, function(e) {
+                    console.log("No audio found.");
+                });
+
+                loading.style.display = 'none';
+            }, onProgress, function ( error ) {
+                console.log("Files not found! Master needs to upload them.");
+                // 占位符
+                const geo = new THREE.CylinderGeometry( 2, 2, 15, 32 );
+                const mat = new THREE.MeshPhongMaterial( { color: 0x39C5BB } );
+                const cylinder = new THREE.Mesh( geo, mat );
+                cylinder.position.y = -2.5;
+                scene.add( cylinder );
+            });
+
+            window.addEventListener( 'resize', onWindowResize );
         }
-        animate();
 
-        window.addEventListener( 'resize', onWindowResize );
+        function onProgress( xhr ) {
+            if ( xhr.lengthComputable ) {
+                const percentComplete = xhr.loaded / xhr.total * 100;
+                if(percentComplete < 100) {
+                    loading.innerHTML = 'Loading MMD Data... ' + Math.round( percentComplete, 2 ) + '%';
+                }
+            }
+        }
+
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize( window.innerWidth, window.innerHeight );
+        }
+
+        function animate() {
+            requestAnimationFrame( animate );
+            helper.update( clock.getDelta() );
+            renderer.render( scene, camera );
         }
     </script>
 </body>
