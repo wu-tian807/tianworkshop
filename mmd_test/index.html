@@ -212,9 +212,7 @@
                 scene.add( currentMesh );
                 helper.add( currentMesh, { 
                     animation: mmd.animation, 
-                    physics: true,
-                    warmup: 60,
-                    unitStep: 1 / 65 
+                    physics: true
                 } );
                 
                 new THREE.AudioLoader().load(audioFile, function(buffer) {
