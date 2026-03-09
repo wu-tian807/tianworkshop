@@ -7,24 +7,75 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: #ffebf0; font-family: sans-serif; }
         #info { position: absolute; top: 20px; width: 100%; text-align: center; color: #ff6b6b; z-index: 100; font-weight: bold; text-shadow: 1px 1px 2px white; pointer-events: none; }
-        .back-btn { position: absolute; top: 15px; left: 15px; padding: 8px 15px; background: #ff6b6b; text-decoration: none; border-radius: 20px; color: white; z-index: 101; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .back-btn { position: absolute; top: 15px; left: 15px; padding: 8px 15px; background: #ff6b6b; text-decoration: none; border-radius: 20px; color: white; z-index: 101; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); pointer-events: auto; }
         #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em; color: #ff6b6b; z-index: 50; background: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px; border: 2px dashed #ff6b6b; text-align: center; line-height: 1.6; }
+        
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            align-items: center;
+        }
+
+        .ctrl-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn:hover {
+            background: #ff4757;
+            transform: scale(1.05);
+        }
+
+        .ctrl-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        select {
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 2px solid #ff6b6b;
+            outline: none;
+            color: #ff6b6b;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <a href="../index.html" class="back-btn">← 回到工坊 (Back)</a>
     <div id="info">
         <h2>🎵 Niangao's 3D Stage 🎵</h2>
-        <p>Waiting for Master to put files in: <code>tianworkshop/assets/mmd/</code></p>
     </div>
     <div id="loading">
-        <b>引擎准备就绪！(Engine Ready)</b><br><br>
-        请将模型命名为：<code>miku.pmx</code><br>
-        将动作命名为：<code>dance.vmd</code><br>
-        将音乐命名为：<code>music.mp3</code><br>
-        放入 <code>assets/mmd/</code> 文件夹中~<br><br>
-        <span style="font-size: 0.8em; color: #666;">（目前只显示占位圆柱体，因为还没有检测到文件哦！）</span>
+        <b>Engine Ready!</b><br>Loading MMD Resources...<br>
     </div>
+    
+    <div id="controls" style="display: none;">
+        <select id="modelSelect">
+            <option value="classic">Classic Miku (V2)</option>
+            <option value="custom">Custom Model (From Master)</option>
+        </select>
+        <button id="btnPlay" class="ctrl-btn">Play / Pause</button>
+        <button id="btnReset" class="ctrl-btn">Reset</button>
+    </div>
+
     <div id="canvas-container"></div>
 
     <script src="https://unpkg.com/three@0.160.0/examples/jsm/libs/ammo.wasm.js"></script>
@@ -45,12 +96,21 @@
 
         const container = document.getElementById('canvas-container');
         const loading = document.getElementById('loading');
+        const controlsDiv = document.getElementById('controls');
+        const btnPlay = document.getElementById('btnPlay');
+        const btnReset = document.getElementById('btnReset');
+        const modelSelect = document.getElementById('modelSelect');
         
-        let scene, camera, renderer, helper;
+        let scene, camera, renderer, helper, currentMesh, currentAudio;
         let clock = new THREE.Clock();
+        let isPlaying = true;
+        let isReady = false;
 
-        // 预期从 Master 那里获取的路径
-        const modelFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/miku/miku_v2.pmd';
+        const models = {
+            classic: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/miku/miku_v2.pmd',
+            custom: '../assets/mmd/miku.pmx' // Master 上传的本地自定义模型
+        };
+
         const vmdFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/vmds/wavefile_v2.vmd';
         const audioFile = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r124/examples/models/mmd/audios/wavefile_short.mp3';
 
@@ -58,6 +118,7 @@
         Ammo().then(function(AmmoLib) {
             Ammo = AmmoLib;
             init();
+            loadMMD(models.classic);
             animate();
         });
 
@@ -88,38 +149,93 @@
             controls.target.set( 0, 0, 0 );
             controls.update();
 
+            window.addEventListener( 'resize', onWindowResize );
+
+            // Bind UI Controls
+            btnPlay.addEventListener('click', togglePlay);
+            btnReset.addEventListener('click', resetAnimation);
+            modelSelect.addEventListener('change', (e) => {
+                loadMMD(models[e.target.value]);
+            });
+        }
+
+        function loadMMD(modelUrl) {
+            isReady = false;
+            loading.style.display = 'block';
+            controlsDiv.style.display = 'none';
+            loading.innerHTML = 'Loading MMD Resources...';
+
+            if(helper) {
+                if(currentMesh) {
+                    scene.remove(currentMesh);
+                    helper.remove(currentMesh);
+                }
+                if(currentAudio) {
+                    scene.remove(currentAudio);
+                    helper.remove(currentAudio);
+                }
+            }
+
             helper = new MMDAnimationHelper();
             const loader = new MMDLoader();
 
-            // 尝试加载 MMD 数据
-            loader.loadWithAnimation( modelFile, vmdFile, function ( mmd ) {
-                const mesh = mmd.mesh;
-                mesh.position.y = -10;
-                scene.add( mesh );
-                helper.add( mesh, { animation: mmd.animation, physics: true } );
+            loader.loadWithAnimation( modelUrl, vmdFile, function ( mmd ) {
+                currentMesh = mmd.mesh;
+                currentMesh.position.y = -10;
+                scene.add( currentMesh );
+                helper.add( currentMesh, { animation: mmd.animation, physics: true } );
                 
                 new THREE.AudioLoader().load(audioFile, function(buffer) {
                     const listener = new THREE.AudioListener();
                     camera.add(listener);
-                    const audio = new THREE.Audio(listener).setBuffer(buffer);
-                    helper.add(audio, { delayTime: 0 });
-                    scene.add(audio);
+                    currentAudio = new THREE.Audio(listener).setBuffer(buffer);
+                    helper.add(currentAudio, { delayTime: 0 });
+                    scene.add(currentAudio);
+                    
+                    finishLoading();
                 }, undefined, function(e) {
                     console.log("No audio found.");
+                    finishLoading();
                 });
-
-                loading.style.display = 'none';
             }, onProgress, function ( error ) {
-                console.log("Files not found! Master needs to upload them.");
-                // 占位符
-                const geo = new THREE.CylinderGeometry( 2, 2, 15, 32 );
-                const mat = new THREE.MeshPhongMaterial( { color: 0x39C5BB } );
-                const cylinder = new THREE.Mesh( geo, mat );
-                cylinder.position.y = -2.5;
-                scene.add( cylinder );
+                console.log(error);
+                loading.innerHTML = '<b>Failed to load model!</b><br>If you chose Custom, make sure <code>miku.pmx</code> exists in <code>tianworkshop/assets/mmd/</code>.<br>Switching back to classic...';
+                setTimeout(() => {
+                    modelSelect.value = 'classic';
+                    loadMMD(models.classic);
+                }, 3000);
             });
+        }
 
-            window.addEventListener( 'resize', onWindowResize );
+        function finishLoading() {
+            loading.style.display = 'none';
+            controlsDiv.style.display = 'flex';
+            isReady = true;
+            isPlaying = true;
+            helper.enable('physics', true);
+            helper.enable('animation', true);
+            if(currentAudio) currentAudio.play();
+        }
+
+        function togglePlay() {
+            if(!isReady) return;
+            isPlaying = !isPlaying;
+            helper.enable('animation', isPlaying);
+            helper.enable('physics', isPlaying); // 暂停时也暂停物理演算
+            
+            if(currentAudio) {
+                if(isPlaying) {
+                    currentAudio.play();
+                } else {
+                    currentAudio.pause();
+                }
+            }
+        }
+
+        function resetAnimation() {
+            if(!isReady) return;
+            // 重新加载实现完全重置
+            loadMMD(models[modelSelect.value]);
         }
 
         function onProgress( xhr ) {
@@ -139,7 +255,11 @@
 
         function animate() {
             requestAnimationFrame( animate );
-            helper.update( clock.getDelta() );
+            if(isReady && isPlaying) {
+                helper.update( clock.getDelta() );
+            } else {
+                clock.getDelta(); // 消耗掉积累的时间，防止恢复时快进
+            }
             renderer.render( scene, camera );
         }
     </script>
