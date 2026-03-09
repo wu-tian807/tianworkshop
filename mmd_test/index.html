@@ -179,7 +179,9 @@
             helper = new MMDAnimationHelper();
             const loader = new MMDLoader();
 
+            // 尝试加载 MMD 数据
             loader.loadWithAnimation( modelUrl, vmdFile, function ( mmd ) {
+                console.log("Model and animation loaded successfully!");
                 currentMesh = mmd.mesh;
                 currentMesh.position.y = -10;
                 scene.add( currentMesh );
