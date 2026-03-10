@@ -76,6 +76,7 @@
             <option value="wavefile">Wavefile (Default)</option>
             <option value="senbonzakura">千本樱 (Senbonzakura) 🌸</option>
             <option value="gokuraku">极乐净土 (Gokuraku Jodo) 🦋</option>
+            <option value="nekomimi">猫耳开关 (Nekomimi Switch) 🐱</option>
         </select>
         <button id="btnPlay" class="ctrl-btn">Play / Pause</button>
         <button id="btnReset" class="ctrl-btn">Reset</button>
@@ -120,7 +121,8 @@
         const motions = {
             wavefile: { vmd: '../assets/mmd/motions/wavefile_v2.vmd', audio: '../assets/mmd/audios/wavefile_short.mp3' },
             senbonzakura: { vmd: '../assets/mmd/motions/senbonzakura.vmd', audio: '../assets/mmd/audios/senbonzakura.mp3' },
-            gokuraku: { vmd: '../assets/mmd/motions/gokuraku_jodo.vmd', audio: '../assets/mmd/audios/gokuraku_jodo.mp3' }
+            gokuraku: { vmd: '../assets/mmd/motions/gokuraku_jodo.vmd', audio: '../assets/mmd/audios/gokuraku_jodo.mp3' },
+            nekomimi: { vmd: '../assets/mmd/motions/nekomimi_switch.vmd', audio: '../assets/mmd/audios/nekomimi_switch.mp3' }
         };
 
         const lastSelectedModel = localStorage.getItem('mmd_selected_model') || 'classic';
