@@ -267,17 +267,29 @@
                 const mats = Array.isArray(currentMesh.material)
                     ? currentMesh.material : [currentMesh.material];
                 mats.forEach(m => {
-                    // MMDLoader 在处理 alpha morph 时会把材质标记为 transparent=true，
-                    // 导致它们走透明渲染通道（按 mesh 中心排序），脸皮渲染到头发后面。
-                    // PMD 文件里所有材质 alpha=1.0，强制不透明即可修复穿透问题。
+                    // 修复透明穿透：PMD 所有材质 alpha=1.0，强制不透明
                     if (m.opacity >= 1.0) {
                         m.transparent = false;
                         m.depthWrite = true;
                     }
-                    // 替换 toon 梯度贴图为柔和版本，消除脸颊/下巴/鼻梁的黑色硬阴影
+
+                    // 替换 toon 梯度贴图为柔和版本
                     if (m.uniforms && m.uniforms.gradientMap) {
                         m.uniforms.gradientMap.value = softGradient;
                     }
+
+                    // 修复眼睛黑圈：
+                    // 眼睑/睫毛材质 diffuse 极深（≈0.12），经过光照计算后接近纯黑。
+                    // 对深色但非纯黑材质加 emissive 自发光，让眼睑保留可见层次感。
+                    // 纯黑材质（眉毛/睫毛线条）保持不变，避免变灰失去边界感。
+                    if (m.color && m.uniforms && m.uniforms.emissive) {
+                        const luma = m.color.r * 0.3 + m.color.g * 0.59 + m.color.b * 0.11;
+                        if (luma > 0.05 && luma < 0.25) {
+                            // 深色非纯黑材质（眼睑区域）：加自发光提亮
+                            m.uniforms.emissive.value.setRGB(0.09, 0.09, 0.09);
+                        }
+                    }
+
                     m.needsUpdate = true;
                 });
 
