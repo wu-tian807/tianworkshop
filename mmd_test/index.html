@@ -236,67 +236,16 @@
                 // Disable frustum culling to prevent geometry disappearing when camera moves
                 currentMesh.frustumCulled = false;
                 
-                // Ultimate fix for PMD models (especially Lat type)
+                // Ensure materials render correctly on both sides to prevent invisible polygons
                 if (Array.isArray(currentMesh.material)) {
                     currentMesh.material.forEach(m => {
-                        // PMD models often have inverted normals on some parts, causing black faces/hollow clothes
-                        // FrontSide is actually safer for Lat models than DoubleSide to prevent z-fighting 
-                        // and edge bleeding, BUT clothes need DoubleSide. So we stick to DoubleSide but fix alpha.
                         m.side = THREE.DoubleSide;
-                        
-                        if (modelUrl.includes('Lat')) {
-                            // LAT MIKU ULTIMATE FIX FOR THREE.JS (2026 Edition)
-                            
-                            // 1. By default, everything is solid and uses alphaTest = 0.5 to cut out hair/skirt fringes.
-                            m.transparent = false;
-                            m.depthWrite = true;
-                            m.alphaTest = 0.5;
-                            
-                            // 2. The ONLY things that should be transparent are true overlays (blush/glasses).
-                            // If they are transparent, they MUST NOT write to depth, or they clip the face behind them.
-                            if (m.opacity < 1.0) {
-                                m.transparent = true;
-                                m.depthWrite = false;
-                                m.alphaTest = 0;
-                            }
-                            
-                            // 3. The "Zombie Face" / "Black Mouth" fix: 
-                            // Lat's face mesh uses a specific mapping. If alphaTest is > 0, Three.js clips the polygons.
-                            // We FORCE alphaTest to 0 for the face and body to guarantee polygons render solid.
-                            // We use material name mapping (common in PMD) or check if it's material index 1 or 2.
-                            if (m.name && (m.name.includes('顔') || m.name.includes('肌') || m.name.includes('体') || m.name.includes('白目'))) {
-                                m.alphaTest = 0; 
-                            }
-                            
-                            // 4. Sometimes names don't load correctly due to encoding.
-                            // Let's use a brute force fallback: if a material is completely solid (opacity=1) 
-                            // AND it uses the face texture (usually toon_hada.bmp or similar, but let's just 
-                            // check if we can prevent alpha testing on solid things).
-                            if (m.opacity === 1.0 && !m.transparent) {
-                                // If it's a solid material, we only want alphaTest if it's hair or clothing fringes.
-                                // Actually, for Lat, forcing alphaTest = 0 on solid materials fixes 99% of black polygon bugs.
-                                // BUT hair needs it. Hair is usually named 髪.
-                                if (m.name && !m.name.includes('髪') && !m.name.includes('服') && !m.name.includes('リボン')) {
-                                    m.alphaTest = 0;
-                                }
-                            }
-                        } else {
-                            // Classic behavior for non-Lat models
-                            if (m.alphaTest > 0) m.alphaTest = 0.5;
-                        }
+                        // Some custom models have weird alpha test values that clip out faces/eyes
+                        if(m.alphaTest > 0) m.alphaTest = 0.5; 
                     });
                 } else {
                     currentMesh.material.side = THREE.DoubleSide;
                     if(currentMesh.material.alphaTest > 0) currentMesh.material.alphaTest = 0.5;
-                }
-                
-                // For Lat Miku, disable shadow casting to prevent the black polygon glitch on the face
-                if (modelUrl.includes('Lat')) {
-                    currentMesh.castShadow = false;
-                    currentMesh.receiveShadow = false;
-                } else {
-                    currentMesh.castShadow = true;
-                    currentMesh.receiveShadow = true;
                 }
 
                 currentMesh.position.y = -10;
