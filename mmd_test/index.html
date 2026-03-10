@@ -108,7 +108,7 @@
         const modelSelect = document.getElementById('modelSelect');
         const motionSelect = document.getElementById('motionSelect');
         
-        let scene, camera, renderer, helper, currentMesh, currentAudio;
+        let scene, camera, renderer, helper, currentMesh, currentAudio, cameraLight;
         let clock = new THREE.Clock();
         let isPlaying = true;
         let isReady = false;
@@ -157,17 +157,20 @@
             camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
             camera.position.set( 0, 10, 40 );
 
-            const ambient = new THREE.AmbientLight( 0xffffff, 0.85 );
+            // 环境光：提供基础亮度
+            const ambient = new THREE.AmbientLight( 0xffffff, 0.55 );
             scene.add( ambient );
 
-            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+            // 主方向光：提供基础方向感
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.45 );
             directionalLight.position.set( -1, 1, 1 ).normalize();
             scene.add( directionalLight );
 
-            // 补光：从右侧补亮脸颊/下巴等侧面区域，用纯白避免和 toon 材质产生色偏
-            const fillLight = new THREE.DirectionalLight( 0xffffff, 0.25 );
-            fillLight.position.set( 1, 0.3, 0.5 ).normalize();
-            scene.add( fillLight );
+            // 摄像机跟随点光源：跟着镜头移动，从观察者方向均匀补光。
+            // 越近光越强，完美消除近距离下的三角形阴影。
+            cameraLight = new THREE.PointLight( 0xffffff, 0.7, 150, 1.5 );
+            cameraLight.position.copy( camera.position );
+            scene.add( cameraLight );
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio( window.devicePixelRatio );
@@ -250,8 +253,8 @@
                     const w = 256;
                     const data = new Uint8Array(w * 4);
                     for (let i = 0; i < w; i++) {
-                        // 线性映射：[0,255] → [150,255]（暗部保留更多亮度，消除硬阴影线）
-                        const v = Math.round(150 + (i / (w - 1)) * 105);
+                        // 极平坦梯度：[210,255]，消除低多边形面片之间的三角形阴影跳变
+                        const v = Math.round(210 + (i / (w - 1)) * 45);
                         data[i * 4 + 0] = v;
                         data[i * 4 + 1] = v;
                         data[i * 4 + 2] = v;
@@ -399,6 +402,8 @@
 
         function animate() {
             requestAnimationFrame( animate );
+            // 摄像机点光源跟随镜头位置，拖近时正面补光增强
+            if ( cameraLight ) cameraLight.position.copy( camera.position );
             if(isReady && isPlaying) {
                 helper.update( clock.getDelta() );
             } else {
