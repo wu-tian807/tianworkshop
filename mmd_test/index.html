@@ -236,44 +236,46 @@
                 // Disable frustum culling to prevent geometry disappearing when camera moves
                 currentMesh.frustumCulled = false;
                 
-                // Enable proper transparency rendering for MMD models in Three.js
-                // Lat model heavily relies on specific rendering order and transparency blending.
-                // The black face is usually caused by the "blush" or "glasses" mesh rendering depth incorrectly.
+                // Ultimate fix for PMD models (especially Lat type)
                 if (Array.isArray(currentMesh.material)) {
                     currentMesh.material.forEach(m => {
+                        // PMD models often have inverted normals on some parts, causing black faces/hollow clothes
+                        // FrontSide is actually safer for Lat models than DoubleSide to prevent z-fighting 
+                        // and edge bleeding, BUT clothes need DoubleSide. So we stick to DoubleSide but fix alpha.
                         m.side = THREE.DoubleSide;
                         
-                        // For Lat models:
                         if (modelUrl.includes('Lat')) {
-                            // The black face on Lat Miku is notoriously caused by "Edge" lines drawing backwards,
-                            // OR the cheek/blush mesh z-fighting. In Three.js, setting depthWrite = false on transparent
-                            // materials is crucial. We will force transparent logic for specific parts.
-                            
-                            // Let's completely disable alphaTest and rely on transparent blending for the whole model 
-                            // to bypass the zombie bug, but keep depthWrite true for opaque things.
-                            
-                            // Lat Miku has a duplicate face mesh used for blush/shadows. 
-                            // If it has alpha < 1 or is explicitly named 'ほほ' (cheeks), make it properly transparent without writing to depth buffer
-                            // If it's the eyes/glasses, also handle transparency.
-                            // Otherwise, normal opaque rendering.
-                            if (m.opacity < 1.0 || (m.name && (m.name.includes('ほほ') || m.name.includes('頬') || m.name.includes('眼鏡') || m.name.includes('glass')))) {
+                            // Reset everything to extremely safe defaults first
+                            m.transparent = false;
+                            m.depthWrite = true;
+                            m.alphaTest = 0.5; // Default strict cutoff
+
+                            // The Zombie Face Bug: Caused by alphaTest clipping the face mesh entirely 
+                            // because it has a slight transparency or texture alpha.
+                            // The missing tie: It might have opacity < 1 or a specific texture.
+                            // The transparent clothes: Caused by m.transparent = true being set globally earlier.
+
+                            // 1. Identify "Blush" / "Cheek" / "Glasses" / "Tears" (Things that MUST be semi-transparent overlay)
+                            if (m.name && (m.name.includes('ほほ') || m.name.includes('頬') || m.name.includes('眼鏡') || m.name.includes('涙') || m.name.includes('照れ'))) {
                                 m.transparent = true;
-                                m.alphaTest = 0.01;
-                                m.depthWrite = false;
-                            } else if (m.map && m.map.image && m.map.image.src && m.map.image.src.includes('png')) {
-                                // If it uses a PNG texture (like hair/clothes fringes), use alphaTest
+                                m.alphaTest = 0; // Do not clip, just blend
+                                m.depthWrite = false; // Do not block things behind it
+                            } 
+                            // 2. Identify Face/Body (Must NOT be transparent, must NOT be clipped by high alphaTest)
+                            else if (m.name && (m.name.includes('顔') || m.name.includes('肌') || m.name.includes('体') || m.name.includes('face') || m.name.includes('body'))) {
                                 m.transparent = false;
-                                m.alphaTest = 0.5;
+                                m.alphaTest = 0.01; // Extremely low cutoff to prevent zombie hole, but allows edge masking
                                 m.depthWrite = true;
-                            } else {
-                                // Normal solid materials (face, body, clothes)
+                            }
+                            // 3. For everything else (Hair, Clothes, Tie, Shoes)
+                            else {
                                 m.transparent = false;
-                                m.alphaTest = 0.5;
+                                m.alphaTest = 0.5; // Standard MMD cutoff
                                 m.depthWrite = true;
                             }
                         } else {
-                            // Classic behavior
-                            if(m.alphaTest > 0) m.alphaTest = 0.5;
+                            // Classic behavior for non-Lat models
+                            if (m.alphaTest > 0) m.alphaTest = 0.5;
                         }
                     });
                 } else {
