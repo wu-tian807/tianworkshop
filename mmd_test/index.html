@@ -236,31 +236,49 @@
                 // Disable frustum culling to prevent geometry disappearing when camera moves
                 currentMesh.frustumCulled = false;
                 
-                // Ensure materials render correctly on both sides to prevent invisible polygons
+                // Enable proper transparency rendering for MMD models in Three.js
+                // Lat model heavily relies on specific rendering order and transparency blending.
+                // The black face is usually caused by the "blush" or "glasses" mesh rendering depth incorrectly.
                 if (Array.isArray(currentMesh.material)) {
                     currentMesh.material.forEach(m => {
                         m.side = THREE.DoubleSide;
-                        // Some custom models have weird alpha test values that clip out faces/eyes
-                        // Lat model needs ~0.001 to render face correctly without being a zombie.
-                        // Standard classic miku needs 0.5. We check the model name to apply the right fix.
+                        
+                        // For Lat models:
                         if (modelUrl.includes('Lat')) {
-                            if(m.alphaTest > 0) m.alphaTest = 0.001;
-                            // Fix black face issue for Lat model specifically:
-                            // Lat model has a specific mesh overlay for cheeks that causes shadow rendering issues in ThreeJS.
-                            // Disabling shadow casting/receiving on materials often helps.
-                            m.depthWrite = true; 
+                            // The black face on Lat Miku is notoriously caused by "Edge" lines drawing backwards,
+                            // OR the cheek/blush mesh z-fighting. In Three.js, setting depthWrite = false on transparent
+                            // materials is crucial. We will force transparent logic for specific parts.
+                            
+                            // Let's completely disable alphaTest and rely on transparent blending for the whole model 
+                            // to bypass the zombie bug, but keep depthWrite true for opaque things.
+                            
+                            // Lat Miku has a duplicate face mesh used for blush/shadows. 
+                            // If it has alpha < 1 or is explicitly named 'ほほ' (cheeks), make it properly transparent without writing to depth buffer
+                            // If it's the eyes/glasses, also handle transparency.
+                            // Otherwise, normal opaque rendering.
+                            if (m.opacity < 1.0 || (m.name && (m.name.includes('ほほ') || m.name.includes('頬') || m.name.includes('眼鏡') || m.name.includes('glass')))) {
+                                m.transparent = true;
+                                m.alphaTest = 0.01;
+                                m.depthWrite = false;
+                            } else if (m.map && m.map.image && m.map.image.src && m.map.image.src.includes('png')) {
+                                // If it uses a PNG texture (like hair/clothes fringes), use alphaTest
+                                m.transparent = false;
+                                m.alphaTest = 0.5;
+                                m.depthWrite = true;
+                            } else {
+                                // Normal solid materials (face, body, clothes)
+                                m.transparent = false;
+                                m.alphaTest = 0.5;
+                                m.depthWrite = true;
+                            }
                         } else {
+                            // Classic behavior
                             if(m.alphaTest > 0) m.alphaTest = 0.5;
                         }
                     });
                 } else {
                     currentMesh.material.side = THREE.DoubleSide;
-                    if (modelUrl.includes('Lat')) {
-                        if(currentMesh.material.alphaTest > 0) currentMesh.material.alphaTest = 0.001;
-                        currentMesh.material.depthWrite = true;
-                    } else {
-                        if(currentMesh.material.alphaTest > 0) currentMesh.material.alphaTest = 0.5;
-                    }
+                    if(currentMesh.material.alphaTest > 0) currentMesh.material.alphaTest = 0.5;
                 }
                 
                 // For Lat Miku, disable shadow casting to prevent the black polygon glitch on the face
