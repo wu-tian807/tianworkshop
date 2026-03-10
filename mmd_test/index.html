@@ -100,6 +100,7 @@
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { MMDLoader } from 'three/addons/loaders/MMDLoader.js';
         import { MMDAnimationHelper } from 'three/addons/animation/MMDAnimationHelper.js';
+        import { OutlineEffect } from 'three/addons/effects/OutlineEffect.js';
 
         const container = document.getElementById('canvas-container');
         const loading = document.getElementById('loading');
@@ -109,7 +110,7 @@
         const modelSelect = document.getElementById('modelSelect');
         const motionSelect = document.getElementById('motionSelect');
         
-        let scene, camera, renderer, helper, currentMesh, currentAudio;
+        let scene, camera, renderer, outlineEffect, helper, currentMesh, currentAudio;
         let clock = new THREE.Clock();
         let isPlaying = true;
         let isReady = false;
@@ -158,17 +159,25 @@
             camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
             camera.position.set( 0, 10, 40 );
 
-            const ambient = new THREE.AmbientLight( 0xcccccc, 0.4 );
+            const ambient = new THREE.AmbientLight( 0xffffff, 0.85 );
             scene.add( ambient );
 
             const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
             directionalLight.position.set( -1, 1, 1 ).normalize();
             scene.add( directionalLight );
 
+            // 补光：从右后方补亮脸颊/下巴/鼻梁等侧面区域
+            const fillLight = new THREE.DirectionalLight( 0xfff0e8, 0.4 );
+            fillLight.position.set( 1, 0.5, -0.5 ).normalize();
+            scene.add( fillLight );
+
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize( window.innerWidth, window.innerHeight );
             container.appendChild( renderer.domElement );
+
+            // OutlineEffect：MMD官方例子的必须组件，负责描边渲染
+            outlineEffect = new OutlineEffect( renderer );
 
             const controls = new OrbitControls( camera, renderer.domElement );
             controls.target.set( 0, 0, 0 );
@@ -236,17 +245,21 @@
                 // Disable frustum culling to prevent geometry disappearing when camera moves
                 currentMesh.frustumCulled = false;
                 
-                // Ensure materials render correctly on both sides to prevent invisible polygons
-                if (Array.isArray(currentMesh.material)) {
-                    currentMesh.material.forEach(m => {
-                        m.side = THREE.DoubleSide;
-                        // Some custom models have weird alpha test values that clip out faces/eyes
-                        if(m.alphaTest > 0) m.alphaTest = 0.5; 
-                    });
-                } else {
-                    currentMesh.material.side = THREE.DoubleSide;
-                    if(currentMesh.material.alphaTest > 0) currentMesh.material.alphaTest = 0.5;
-                }
+                // 修复脸部空洞问题：
+                // MMDLoader 给所有材质设置了 CustomBlending（奇异 alpha 混合方程），
+                // 这在脸颊、下巴、鼻梁等侧面曲面上会产生透明空洞。
+                // 改为 NormalBlending + DoubleSide + 正确的深度写入即可修复。
+                const mats = Array.isArray(currentMesh.material)
+                    ? currentMesh.material : [currentMesh.material];
+                mats.forEach(m => {
+                    m.side = THREE.DoubleSide;
+                    m.blending = THREE.NormalBlending;
+                    m.depthWrite = true;
+                    m.depthTest = true;
+                    m.transparent = false;
+                    m.alphaTest = 0;
+                    m.needsUpdate = true;
+                });
 
                 currentMesh.position.y = -10;
                 scene.add( currentMesh );
@@ -359,7 +372,7 @@
             } else {
                 clock.getDelta(); // 消耗掉积累的时间，防止恢复时快进
             }
-            renderer.render( scene, camera );
+            outlineEffect.render( scene, camera );
         }
     </script>
 </body>
