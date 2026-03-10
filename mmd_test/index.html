@@ -100,8 +100,6 @@
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { MMDLoader } from 'three/addons/loaders/MMDLoader.js';
         import { MMDAnimationHelper } from 'three/addons/animation/MMDAnimationHelper.js';
-        import { OutlineEffect } from 'three/addons/effects/OutlineEffect.js';
-
         const container = document.getElementById('canvas-container');
         const loading = document.getElementById('loading');
         const controlsDiv = document.getElementById('controls');
@@ -110,7 +108,7 @@
         const modelSelect = document.getElementById('modelSelect');
         const motionSelect = document.getElementById('motionSelect');
         
-        let scene, camera, renderer, outlineEffect, helper, currentMesh, currentAudio;
+        let scene, camera, renderer, helper, currentMesh, currentAudio;
         let clock = new THREE.Clock();
         let isPlaying = true;
         let isReady = false;
@@ -175,9 +173,6 @@
             renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize( window.innerWidth, window.innerHeight );
             container.appendChild( renderer.domElement );
-
-            // OutlineEffect：MMD官方例子的必须组件，负责描边渲染
-            outlineEffect = new OutlineEffect( renderer );
 
             const controls = new OrbitControls( camera, renderer.domElement );
             controls.target.set( 0, 0, 0 );
@@ -245,18 +240,37 @@
                 // Disable frustum culling to prevent geometry disappearing when camera moves
                 currentMesh.frustumCulled = false;
                 
-                // 修复脸部空洞问题：
-                // MMDLoader 默认给所有材质设置了 CustomBlending（含奇异的 DstAlphaFactor），
-                // 这在侧面曲面（脸颊、下巴、鼻梁）上会产生 alpha 累积错误，导致透明空洞。
-                // 改为 NormalBlending 修复此问题。
-                // 注意：不覆盖 side，保持 MMDLoader 的 FrontSide 设置，
-                // 这样 OutlineEffect 的背面描边 pass 才能正确工作。
+                // 修复脸部"黑洞"问题：
+                // MMD toon 着色使用梯度贴图（gradientMap）决定明暗分界。
+                // 默认的 toon02.bmp 梯度非常硬（从纯白直接跳到深黑），
+                // 导致脸颊/下巴/鼻梁等侧向法线区域被渲染成近纯黑——看起来像"空洞"。
+                // 解决方案：创建一个更柔和的渐变贴图替换所有材质的 gradientMap，
+                // 让暗部最低保留 ~45% 亮度而不是接近 0。
+                const softGradient = (() => {
+                    const w = 256;
+                    const data = new Uint8Array(w * 4);
+                    for (let i = 0; i < w; i++) {
+                        // 线性映射：[0,255] → [115,255]（暗部保留亮度，不跌到黑）
+                        const v = Math.round(115 + (i / (w - 1)) * 140);
+                        data[i * 4 + 0] = v;
+                        data[i * 4 + 1] = v;
+                        data[i * 4 + 2] = v;
+                        data[i * 4 + 3] = 255;
+                    }
+                    const tex = new THREE.DataTexture(data, w, 1, THREE.RGBAFormat);
+                    tex.minFilter = THREE.LinearFilter;
+                    tex.magFilter = THREE.LinearFilter;
+                    tex.needsUpdate = true;
+                    return tex;
+                })();
+
                 const mats = Array.isArray(currentMesh.material)
                     ? currentMesh.material : [currentMesh.material];
                 mats.forEach(m => {
-                    m.blending = THREE.NormalBlending;
-                    m.depthWrite = true;
-                    m.depthTest = true;
+                    // 替换 toon 梯度贴图为柔和版本
+                    if (m.uniforms && m.uniforms.gradientMap) {
+                        m.uniforms.gradientMap.value = softGradient;
+                    }
                     m.needsUpdate = true;
                 });
 
@@ -371,7 +385,7 @@
             } else {
                 clock.getDelta(); // 消耗掉积累的时间，防止恢复时快进
             }
-            outlineEffect.render( scene, camera );
+            renderer.render( scene, camera );
         }
     </script>
 </body>
