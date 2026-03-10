@@ -246,18 +246,17 @@
                 currentMesh.frustumCulled = false;
                 
                 // 修复脸部空洞问题：
-                // MMDLoader 给所有材质设置了 CustomBlending（奇异 alpha 混合方程），
-                // 这在脸颊、下巴、鼻梁等侧面曲面上会产生透明空洞。
-                // 改为 NormalBlending + DoubleSide + 正确的深度写入即可修复。
+                // MMDLoader 默认给所有材质设置了 CustomBlending（含奇异的 DstAlphaFactor），
+                // 这在侧面曲面（脸颊、下巴、鼻梁）上会产生 alpha 累积错误，导致透明空洞。
+                // 改为 NormalBlending 修复此问题。
+                // 注意：不覆盖 side，保持 MMDLoader 的 FrontSide 设置，
+                // 这样 OutlineEffect 的背面描边 pass 才能正确工作。
                 const mats = Array.isArray(currentMesh.material)
                     ? currentMesh.material : [currentMesh.material];
                 mats.forEach(m => {
-                    m.side = THREE.DoubleSide;
                     m.blending = THREE.NormalBlending;
                     m.depthWrite = true;
                     m.depthTest = true;
-                    m.transparent = false;
-                    m.alphaTest = 0;
                     m.needsUpdate = true;
                 });
 
