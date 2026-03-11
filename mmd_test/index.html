@@ -56,6 +56,30 @@
             font-weight: bold;
             cursor: pointer;
         }
+    
+        .floating-notes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .note {
+            position: absolute;
+            font-size: 24px;
+            color: #ff6b6b;
+            opacity: 0;
+            animation: float-up 4s linear infinite;
+        }
+        @keyframes float-up {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    
     </style>
 </head>
 <body>
@@ -430,6 +454,29 @@
             }
             renderer.render( scene, camera );
         }
+    
+        // Floating Notes Effect
+        const notesContainer = document.createElement('div');
+        notesContainer.className = 'floating-notes';
+        document.body.appendChild(notesContainer);
+        const noteSymbols = ['🎵', '🎶', '✨', '🌸', '💖'];
+        
+        function createNote() {
+            if(!isPlaying) return;
+            const note = document.createElement('div');
+            note.className = 'note';
+            note.innerText = noteSymbols[Math.floor(Math.random() * noteSymbols.length)];
+            note.style.left = Math.random() * 100 + 'vw';
+            note.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            note.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            notesContainer.appendChild(note);
+            
+            setTimeout(() => {
+                note.remove();
+            }, 5000);
+        }
+        setInterval(createNote, 800);
+    
     </script>
 </body>
 </html>
