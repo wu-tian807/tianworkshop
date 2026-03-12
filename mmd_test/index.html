@@ -182,19 +182,64 @@
             camera.position.set( 0, 10, 40 );
 
             // 环境光：提供基础亮度
-            const ambient = new THREE.AmbientLight( 0xffffff, 0.55 );
+            const ambient = new THREE.AmbientLight( 0xffffff, 0.4 );
             scene.add( ambient );
 
             // 主方向光：提供基础方向感
-            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.45 );
+            const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.3 );
             directionalLight.position.set( -1, 1, 1 ).normalize();
             scene.add( directionalLight );
 
-            // 摄像机跟随点光源：跟着镜头移动，从观察者方向均匀补光。
-            // 越近光越强，完美消除近距离下的三角形阴影。
-            cameraLight = new THREE.PointLight( 0xffffff, 0.7, 150, 1.5 );
+            // 摄像机跟随点光源
+            cameraLight = new THREE.PointLight( 0xffffff, 0.5, 150, 1.5 );
             cameraLight.position.copy( camera.position );
             scene.add( cameraLight );
+
+            // 舞台聚光灯 (Concert Spotlight)
+            const spotLight = new THREE.SpotLight( 0x39C5BB, 500 );
+            spotLight.position.set( 0, 30, 20 );
+            spotLight.angle = Math.PI / 6;
+            spotLight.penumbra = 0.3;
+            spotLight.decay = 2;
+            spotLight.distance = 100;
+            spotLight.castShadow = true;
+            scene.add( spotLight );
+            
+            const spotLight2 = new THREE.SpotLight( 0xff6b6b, 500 );
+            spotLight2.position.set( 0, 30, -20 );
+            spotLight2.angle = Math.PI / 6;
+            spotLight2.penumbra = 0.3;
+            spotLight2.decay = 2;
+            spotLight2.distance = 100;
+            spotLight2.castShadow = true;
+            scene.add( spotLight2 );
+
+            // 舞台底板 (Stage Floor)
+            const floorGeometry = new THREE.CylinderGeometry( 20, 22, 2, 32 );
+            const floorMaterial = new THREE.MeshPhysicalMaterial({ 
+                color: 0x111111,
+                metalness: 0.8,
+                roughness: 0.2,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1
+            });
+            const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+            floor.position.y = -11;
+            floor.receiveShadow = true;
+            scene.add( floor );
+
+            // Rotating stage ring
+            const ringGeo = new THREE.TorusGeometry( 22, 0.5, 16, 100 );
+            const ringMat = new THREE.MeshBasicMaterial( { color: 0x39C5BB } );
+            const ring = new THREE.Mesh( ringGeo, ringMat );
+            ring.position.y = -10;
+            ring.rotation.x = Math.PI / 2;
+            scene.add( ring );
+            
+            // Assign to global for animation
+            window.stageRing = ring;
+            window.spotLight = spotLight;
+            window.spotLight2 = spotLight2;
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio( window.devicePixelRatio );
@@ -445,6 +490,25 @@
 
         function animate() {
             requestAnimationFrame( animate );
+            
+            const time = clock.getElapsedTime();
+            
+            // 舞台特效动画
+            if (window.stageRing) {
+                window.stageRing.rotation.z += 0.01;
+                // 色彩呼吸
+                window.stageRing.material.color.setHSL((time * 0.1) % 1, 0.8, 0.5);
+            }
+            if (window.spotLight && window.spotLight2) {
+                window.spotLight.position.x = Math.sin(time) * 30;
+                window.spotLight.position.z = Math.cos(time) * 30;
+                window.spotLight.color.setHSL((time * 0.2) % 1, 1, 0.5);
+                
+                window.spotLight2.position.x = Math.cos(time) * 30;
+                window.spotLight2.position.z = Math.sin(time) * 30;
+                window.spotLight2.color.setHSL(((time * 0.2) + 0.5) % 1, 1, 0.5);
+            }
+
             // 摄像机点光源跟随镜头位置，拖近时正面补光增强
             if ( cameraLight ) cameraLight.position.copy( camera.position );
             if(isReady && isPlaying) {
