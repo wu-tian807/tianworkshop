@@ -73,11 +73,34 @@
             opacity: 0;
             animation: float-up 4s linear infinite;
         }
+        
+        .sakura-petal {
+            position: absolute;
+            background: #ffb7c5;
+            border-radius: 150% 0 150% 0;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 11;
+            animation: fall linear infinite, sway ease-in-out infinite alternate;
+        }
+
         @keyframes float-up {
             0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
             20% { opacity: 0.8; }
             80% { opacity: 0.8; }
             100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotateZ(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotateZ(360deg); opacity: 0; }
+        }
+        
+        @keyframes sway {
+            0% { margin-left: -20px; }
+            100% { margin-left: 20px; }
         }
     
     </style>
@@ -540,6 +563,29 @@
             }, 5000);
         }
         setInterval(createNote, 800);
+        
+        // Sakura Falling Effect (Only for Senbonzakura or random)
+        function createSakura() {
+            if (!isPlaying || motionSelect.value !== 'senbonzakura') return;
+            const petal = document.createElement('div');
+            petal.className = 'sakura-petal';
+            
+            // Randomize size, position, and duration
+            const size = Math.random() * 10 + 5; // 5-15px
+            petal.style.width = size + 'px';
+            petal.style.height = size + 'px';
+            petal.style.left = Math.random() * 100 + 'vw';
+            
+            const duration = Math.random() * 3 + 4; // 4-7s
+            petal.style.animationDuration = duration + 's, ' + (Math.random() * 2 + 1) + 's'; // fall, sway
+            
+            notesContainer.appendChild(petal);
+            
+            setTimeout(() => {
+                petal.remove();
+            }, duration * 1000);
+        }
+        setInterval(createSakura, 300);
     
     </script>
 </body>
