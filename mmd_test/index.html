@@ -430,55 +430,46 @@
             loading.style.display = 'none';
             controlsDiv.style.display = 'flex';
             isReady = true;
-            isPlaying = true;
-            helper.enable('physics', true);
-            helper.enable('animation', true);
             
-            if(currentAudio) {
-                // If user already clicked something (like changing a dropdown), 
-                // the AudioContext is likely unlocked, but we still handle the promise.
-                // Note: THREE.Audio.play() returns 'this' (the audio object), NOT a promise in most Three.js versions.
-                // We should check if currentAudio.context is running instead.
+            // 手机端/移动端为了百分百绕过自动播放限制，强制初始状态为暂停，等待用户第一次点击
+            isPlaying = false;
+            helper.enable('physics', false);
+            helper.enable('animation', false);
+            
+            btnPlay.innerText = "Start MMD 🎵";
+            btnPlay.style.background = "#ff4757";
+            btnPlay.style.transform = "scale(1.1)";
+            btnPlay.style.animation = "pulse 1.5s infinite";
+            
+            const onFirstInteraction = (e) => {
+                e.preventDefault(); // 阻止默认行为以防止多次触发
                 
-                try {
-                    currentAudio.play();
-                    
-                    if (currentAudio.context.state === 'suspended') {
-                        throw new Error("AudioContext suspended");
-                    }
-                } catch(error) {
-                    console.log("Audio autoplay prevented. Will play after user interaction.", error);
-                    // Force pause animation so it stays synced with audio
-                    isPlaying = false;
-                    helper.enable('animation', false);
-                    helper.enable('physics', false);
-                    
-                    const oldText = btnPlay.innerText;
-                    btnPlay.innerText = "Click to Start 🎵";
-                    btnPlay.style.background = "#ff4757";
-                    btnPlay.style.transform = "scale(1.1)";
-                    btnPlay.style.animation = "pulse 1.5s infinite";
-                    
-                    const onInteraction = () => {
-                        if(currentAudio && currentAudio.context.state === 'suspended') {
-                            currentAudio.context.resume();
-                        }
-                        isPlaying = true;
-                        helper.enable('animation', true);
-                        helper.enable('physics', true);
-                        if (!currentAudio.isPlaying) {
-                            currentAudio.play();
-                        }
-                        
-                        btnPlay.innerText = "Play / Pause";
-                        btnPlay.style.background = "#ff6b6b";
-                        btnPlay.style.transform = "none";
-                        btnPlay.style.animation = "none";
-                        btnPlay.removeEventListener('click', onInteraction);
-                    };
-                    btnPlay.addEventListener('click', onInteraction, { once: true });
+                // 强制解锁全局 AudioContext
+                const ctx = THREE.AudioContext.getContext();
+                if (ctx && ctx.state === 'suspended') {
+                    ctx.resume();
                 }
-            }
+
+                isPlaying = true;
+                helper.enable('animation', true);
+                helper.enable('physics', true);
+                
+                if (currentAudio && !currentAudio.isPlaying) {
+                    currentAudio.play();
+                }
+                
+                btnPlay.innerText = "Play / Pause";
+                btnPlay.style.background = "#ff6b6b";
+                btnPlay.style.transform = "none";
+                btnPlay.style.animation = "none";
+                
+                // 移除一次性事件
+                btnPlay.removeEventListener('click', onFirstInteraction);
+                btnPlay.removeEventListener('touchstart', onFirstInteraction);
+            };
+            
+            btnPlay.addEventListener('click', onFirstInteraction);
+            btnPlay.addEventListener('touchstart', onFirstInteraction, { passive: false });
         }
 
         function togglePlay() {
