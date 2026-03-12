@@ -514,7 +514,8 @@
         function animate() {
             requestAnimationFrame( animate );
             
-            const time = clock.getElapsedTime();
+            const delta = clock.getDelta();
+            const time = clock.elapsedTime;
             
             // 舞台特效动画
             if (window.stageRing) {
@@ -535,9 +536,7 @@
             // 摄像机点光源跟随镜头位置，拖近时正面补光增强
             if ( cameraLight ) cameraLight.position.copy( camera.position );
             if(isReady && isPlaying) {
-                helper.update( clock.getDelta() );
-            } else {
-                clock.getDelta(); // 消耗掉积累的时间，防止恢复时快进
+                helper.update( delta );
             }
             renderer.render( scene, camera );
         }
