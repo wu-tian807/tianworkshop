@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live2D Virtual Idol Room | Tian Workshop</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(to right, #39C5BB, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(57, 197, 187, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: #a2a2a2;
+            font-size: 1.1em;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1em;
+            opacity: 0.6;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            z-index: 20;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-3px);
+        }
+
+        #live2d-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            border: 2px solid rgba(57, 197, 187, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(57, 197, 187, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        .status-text {
+            position: absolute;
+            z-index: 10;
+            font-size: 1.5em;
+            color: #39C5BB;
+            animation: pulse 2s infinite;
+            text-shadow: 0 0 10px rgba(57, 197, 187, 0.5);
+            pointer-events: none;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            z-index: 10;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(57, 197, 187, 0.5);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: rgba(57, 197, 187, 0.2);
+            box-shadow: 0 0 15px rgba(57, 197, 187, 0.4);
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 0.6; transform: scale(0.98); }
+        }
+
+        /* Floating stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            opacity: 0.4;
+            animation: twinkle 4s infinite linear;
+        }
+        @keyframes twinkle {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <a href="index.html" class="back-btn">← Back to Workshop</a>
+
+    <div class="header">
+        <h1>Live2D Virtual Idol Room</h1>
+        <p>Testing WebGL & Cubism Integration... ✨</p>
+    </div>
+
+    <div id="live2d-container">
+        <div class="status-text" id="status">Installing PixiJS & Cubism Core... ⏳</div>
+        <canvas id="glcanvas"></canvas>
+        <div class="controls">
+            <button class="btn" onclick="alert('Module still compiling! Master, wait a bit longer~ 💕')">Wave 👋</button>
+            <button class="btn" onclick="alert('Module still compiling! Master, wait a bit longer~ 💕')">Smile 😊</button>
+            <button class="btn" onclick="alert('Module still compiling! Master, wait a bit longer~ 💕')">Sing 🎵</button>
+        </div>
+    </div>
+
+    <script>
+        // Placeholder for future WebGL context rendering
+        const canvas = document.getElementById('glcanvas');
+        const gl = canvas.getContext('webgl');
+        if (!gl) {
+            document.getElementById('status').innerText = 'WebGL not supported! 😢';
+        } else {
+            // Draw a simple dark gradient background on the canvas itself as a placeholder
+            // In a real Live2D setup, PixiJS handles this.
+            gl.clearColor(0.0, 0.0, 0.0, 0.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+    </script>
+</body>
+</html>
