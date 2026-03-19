@@ -229,3 +229,4 @@ h1 {
     animation: shimmer 3s linear infinite;
     font-weight: bold;
 }.btn:hover { animation: wiggle 0.5s ease-in-out; } @keyframes wiggle { 0% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } 75% { transform: rotate(-2deg); } 100% { transform: rotate(0deg); } }
+/* Added by Niangao: a soft pink glow for the idol stage! */ .stage { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4); }
