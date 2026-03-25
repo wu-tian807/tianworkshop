@@ -40,6 +40,8 @@
             50% { transform: translateY(-20px); }
         }
     </style>
+    <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/dcatfly/Live2D-Web-API@main/live2d.min.js"></script>
 </head>
 <body>
     <div class="content">
@@ -48,7 +50,8 @@
         
         <div class="stage">
             <div class="platform"></div>
-            <div class="miku-placeholder">🎵</div>
+            <div class="miku-placeholder" style="display:none;">🎵</div>
+            <canvas id="live2d_stage" width="400" height="600" style="position: absolute; bottom: 10vh; z-index: 10;"></canvas>
         </div>
 
         <div class="nav-grid">
@@ -82,6 +85,9 @@
         }
         
         setInterval(createParticle, 200);
+    </script>
+    <script>
+        loadlive2d("live2d_stage", "https://cdn.jsdelivr.net/gh/Eikanya/Live2d-model/Live2D/model/miku/miku.model.json");
     </script>
 </body>
 </html>
