@@ -89,6 +89,16 @@
     </script>
     <script>
         loadlive2d("live2d_stage", "https://cdn.jsdelivr.net/gh/Eikanya/Live2d-model/Live2D/model/miku/miku.model.json");
+        // Basic interaction to receive song commands
+        function playSong(videoId, title) {
+            document.getElementById('current_song').innerText = 'Now Playing: ' + title;
+            // Later we can embed the actual YouTube iframe or audio player here
+        }
+        
+        // Auto-play the last added song as a demo if URL has ?demo
+        if (window.location.search.includes('demo')) {
+            playSong('jsQXgDZIIrY', 'Intergalactic Bound');
+        }
     </script>
 </body>
 </html>
