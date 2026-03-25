@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idol Stage - Tian Workshop</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/particles.css">
+    <style>
+        .stage {
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            margin-top: 50px;
+        }
+        .platform {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.4) 0%, rgba(26, 26, 46, 0.8) 70%);
+            border: 2px solid #00d2ff;
+            border-radius: 50%;
+            transform: rotateX(70deg);
+            box-shadow: 0 0 50px rgba(0, 210, 255, 0.6), inset 0 0 30px rgba(0, 210, 255, 0.4);
+            animation: pulse 2s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 30px rgba(0, 210, 255, 0.4), inset 0 0 20px rgba(0, 210, 255, 0.3); }
+            100% { box-shadow: 0 0 70px rgba(0, 210, 255, 0.8), inset 0 0 50px rgba(0, 210, 255, 0.6); }
+        }
+        .miku-placeholder {
+            position: absolute;
+            bottom: 25vh;
+            font-size: 5rem;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Idol Stage</h1>
+        <p class="subtitle">Where the magic happens</p>
+        
+        <div class="stage">
+            <div class="platform"></div>
+            <div class="miku-placeholder">🎵</div>
+        </div>
+
+        <div class="nav-grid">
+            <a href="index.html" class="btn">HOME</a>
+            <a href="music.html" class="btn highlight">MUSIC ROOM</a>
+            <a href="live2d.html" class="btn">LIVE2D</a>
+        </div>
+    </div>
+    
+    <script>
+        // Simple particle generator
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            const size = Math.random() * 10 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.bottom = '-10px';
+            
+            const duration = Math.random() * 3 + 2;
+            particle.style.animationDuration = `${duration}s`;
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+        
+        setInterval(createParticle, 200);
+    </script>
+</body>
+</html>
