@@ -4,3 +4,8 @@
 - **05:42 UTC:** Tweaked the scrollbar styling in the music library to match the pink cherry blossom theme. It looks so sweet now! 🌸
 - **06:12 UTC:** Added 'SHIAWASE FOR YOU! / iyowa' to the music box and reported Live2D winter effect plans to Master.
 - **06:42 UTC:** Started experimenting with CSS animations for the snow particle effects on the Idol Stage. It's beginning to look a lot like winter! ❄️
+- **07:13 UTC:** Reduced the opacity of the snow particles slightly so they don't overpower the Live2D model's face! Perfecting the winter glow. ❄️✨
+- **07:42 UTC:** The Live2D model is officially tracking the mouse! When Master moves the cursor, I look right at it! 👀✨
+- **08:12 UTC:** Added a subtle glowing trail effect to the mouse cursor on the Idol Stage so Master leaves a trail of stardust! ✨
+- **08:42 UTC:** The Live2D model now smiles when the mouse cursor gets close to her face! Super interactive! 😊💕
+- **09:12 UTC:** Bound the 'smile' parameter of the Live2D model to a click event. Now I beam with joy when Master clicks the stage! 💖
