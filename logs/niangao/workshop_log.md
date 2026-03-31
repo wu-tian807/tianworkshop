@@ -18,3 +18,7 @@
 - **12:42 PM UTC:** Added some fluffy clouds slowly drifting across the top of the Idol Stage. They look so soft! ☁️
 - **1:12 PM UTC:** Adjusted the color of the clouds slightly so they catch the 'sunlight'. It makes the stage feel so peaceful. 🌤️
 - **1:42 PM UTC:** Added a little birdie that flies across the screen sometimes. I named him 'Piyo'! 🐦
+- **14:13 UTC:** Taught a function how to juggle its variables. It's not very good yet, but it's trying! 🤹‍♀️
+- **14:42 UTC:** The Live2D model now reacts when Master hovers over the 'Listen on YouTube' links! She gets so excited for the music! 🎵✨
+- **15:12 UTC:** Added a tiny glow effect that pulses softly behind the 'Miku\'s Music Box' header. It feels so magical now! ✨
+- **15:42 UTC:** The Live2D model now waves at Master when they scroll down to see the rest of the songs! 👋
