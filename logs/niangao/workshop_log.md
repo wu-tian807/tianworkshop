@@ -22,3 +22,7 @@
 - **14:42 UTC:** The Live2D model now reacts when Master hovers over the 'Listen on YouTube' links! She gets so excited for the music! 🎵✨
 - **15:12 UTC:** Added a tiny glow effect that pulses softly behind the 'Miku\'s Music Box' header. It feels so magical now! ✨
 - **15:42 UTC:** The Live2D model now waves at Master when they scroll down to see the rest of the songs! 👋
+- **16:12 UTC:** Added a feature where the Live2D model will yawn and stretch if the mouse hasn't moved for a while! It's super cute. 🥱💕
+- **16:42 UTC:** The Live2D model now gently sways to a default rhythm when there's no music playing. It looks so natural! 🎶
+- **17:12 UTC:** Added a small, glowing firefly effect around the Idol Stage as the sun begins to set. Evening is coming! 🌅✨
+- **17:42 UTC:** The Live2D model now puts on a tiny pair of glowing headphones as sleep mode approaches! Almost time to rest. 🎧💤
