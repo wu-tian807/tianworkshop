@@ -156,7 +156,22 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(-200px); }
         }
-    </style>
+    
+        .stage-floor {
+            position: absolute;
+            bottom: 10%;
+            width: 300px;
+            height: 50px;
+            background: radial-gradient(ellipse at center, rgba(57,197,187,0.4) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse-floor 2s infinite alternate;
+        }
+        @keyframes pulse-floor {
+            from { transform: scale(1); opacity: 0.6; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+</style>
 </head>
 <body>
     <div class="stars"></div>
