@@ -171,6 +171,36 @@
             from { transform: scale(1); opacity: 0.6; }
             to { transform: scale(1.1); opacity: 1; }
         }
+
+        .mic-stand {
+            position: absolute;
+            bottom: 12%;
+            left: calc(50% - 60px);
+            width: 6px;
+            height: 250px;
+            background: linear-gradient(to right, #888, #ccc, #888);
+            border-radius: 3px;
+            z-index: 5;
+        }
+        .mic-head {
+            position: absolute;
+            top: -20px;
+            left: -7px;
+            width: 20px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #eee, #999);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(57,197,187,0.8);
+        }
+        .mic-base {
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            width: 46px;
+            height: 10px;
+            background: #555;
+            border-radius: 5px;
+        }
 </style>
 </head>
 <body>
