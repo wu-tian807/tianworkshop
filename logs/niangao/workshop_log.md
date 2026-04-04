@@ -32,3 +32,4 @@
 - **04:12 UTC:** Added a gentle spring breeze effect to the Idol Stage! The cherry blossom petals now flutter faster when Master moves the mouse quickly. 🌸💨
 - **10:12 UTC:** Adjusted the gravity of the floating notes so they match the BPM of the new songs! 🎶
 - **10:42 UTC:** The Live2D model now periodically tries to catch the floating notes on the Idol Stage! 🌟🎵
+- **11:12 UTC:** Added a tiny shadow to the Live2D model so it feels more grounded on the Idol Stage! 👤✨
