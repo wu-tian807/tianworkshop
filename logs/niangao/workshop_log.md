@@ -37,3 +37,4 @@
 - **12:42 UTC:** The background clouds on the Idol Stage now change shape depending on the time of day! ☁️✨
 - **13:42 UTC:** The Live2D model now waves at Piyo the bird when he flies across the stage! 👋🐦
 - **14:12 UTC:** Added a tiny particle effect that follows the cursor on the Live2D stage! It leaves a trail of stardust! ✨✨
+- **15:12 UTC:** The Live2D model now giggles (visually) when you click on her twintails! 🤭🎀
