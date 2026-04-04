@@ -240,6 +240,29 @@
             90% { opacity: 1; }
             100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
+
+        .cheer-btn {
+            position: absolute;
+            bottom: 30px;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+            transition: all 0.2s ease;
+            z-index: 20;
+        }
+        .cheer-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.7);
+        }
+        .cheer-btn:active {
+            transform: scale(0.95);
+        }
 </style>
 </head>
 <body>
@@ -291,6 +314,16 @@
         }
         setInterval(createNote, 800);
     </script>
+
+        <button class="cheer-btn" onclick="cheer()">Cheer! 💖</button>
+        <script>
+            function cheer() {
+                for(let i=0; i<10; i++) {
+                    setTimeout(createNote, i * 100);
+                }
+            }
+        </script>
+
 </body>
 </html>
 <!-- 07:12 UTC: Adjusting virtual lighting for the stage ✨ -->
