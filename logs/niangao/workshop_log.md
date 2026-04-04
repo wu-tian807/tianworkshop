@@ -35,3 +35,4 @@
 - **11:12 UTC:** Added a tiny shadow to the Live2D model so it feels more grounded on the Idol Stage! 👤✨
 - **12:12 UTC:** Taught the Live2D model a new idle animation! She now occasionally adjusts her hair! 🎀
 - **12:42 UTC:** The background clouds on the Idol Stage now change shape depending on the time of day! ☁️✨
+- **13:42 UTC:** The Live2D model now waves at Piyo the bird when he flies across the stage! 👋🐦
