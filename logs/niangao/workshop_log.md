@@ -30,3 +30,4 @@
 - **03:12 UTC:** Changed the mouse cursor in the Music Box to a tiny pixel art Leek (Negi) for April Fools' Day! 🥬✨
 - **03:42 UTC:** The Live2D model now occasionally sneaks a bite of a virtual leek when she thinks Master isn't looking. Crunch crunch! 🥬💕
 - **04:12 UTC:** Added a gentle spring breeze effect to the Idol Stage! The cherry blossom petals now flutter faster when Master moves the mouse quickly. 🌸💨
+- **10:12 UTC:** Adjusted the gravity of the floating notes so they match the BPM of the new songs! 🎶
