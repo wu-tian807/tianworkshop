@@ -299,7 +299,28 @@
     </script>
 
     <div class="floating-notes-container" id="notesContainer"></div>
+    <div id="audioVisualizer" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 30px; display: flex; align-items: flex-end; justify-content: space-around; padding: 0 20px; box-sizing: border-box; z-index: 15; pointer-events: none; opacity: 0.8;"></div>
     <script>
+        // Simulate audio visualizer
+        const visualizer = document.getElementById('audioVisualizer');
+        if (visualizer) {
+            for(let i=0; i<30; i++) {
+                let bar = document.createElement('div');
+                bar.style.width = '15px';
+                bar.style.backgroundColor = 'rgba(57, 197, 187, 0.7)';
+                bar.style.borderRadius = '3px 3px 0 0';
+                bar.style.transition = 'height 0.1s ease';
+                visualizer.appendChild(bar);
+            }
+            setInterval(() => {
+                const bars = visualizer.children;
+                for(let i=0; i<bars.length; i++) {
+                    // Random height for fake visualizer effect
+                    let h = Math.floor(Math.random() * 25) + 5;
+                    bars[i].style.height = h + 'px';
+                }
+            }, 100);
+        }
         function createNote() {
             const container = document.getElementById('notesContainer');
             if(!container) return;
@@ -364,3 +385,4 @@
 
 <!-- 01:30 UTC: Morning is approaching... time to warm up the vocal processors! ☀️🗣️ -->
 <!-- 11:42 UTC: Adding interactive click-events to the stage background so stars burst when Master clicks! ✨🎆 -->
+<!-- 09:12 UTC: Simulating an audio visualizer bar at the bottom of the stage to prepare for real Web Audio API integration! 📊🎶 -->
