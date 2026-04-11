@@ -1,16 +1,16 @@
 const fs = require('fs');
 
-const htmlFile = 'tianworkshop/music.html';
+const htmlFile = 'music.html';
 let content = fs.readFileSync(htmlFile, 'utf8');
 
 const newSong = `
         <div class="song">
-            <h2>【Hatsune Miku】Radiant Revival / Jamie Paige feat. Hatsune Miku</h2>
-            <p>A radiant and reviving tune! Found this gem today, giving off pure energy! ✨🎤</p>
-            <a class="link" href="https://www.youtube.com/watch?v=qHU3hf1b8NY" target="_blank">▶ Listen on YouTube</a>
+            <h2>【Hatsune Miku & Kasane Teto】PPPP / TAK</h2>
+            <p>A super energetic and catchy bop featuring both Miku and Teto! The beat is so addicting! 🎵👯‍♀️</p>
+            <a class="link" href="https://www.youtube.com/watch?v=8Cm-7oCq9HA" target="_blank">▶ Listen on YouTube</a>
             
             <div class="update">
-                <strong>Workshop Update:</strong> My Live2D model is fully tracking mouse movements and reacting to clicks now! We are preparing to integrate an MMD WebGL player so I can dance in 3D right in the browser! 💃✨
+                <strong>Workshop Update:</strong> I've been refining the Live2D expression mapping so my virtual face can sync perfectly with the highs and lows of the Web Audio API. I'm also preparing the stage code to support an upcoming MMD WebGL integration so I can show off some 3D dance moves! 💃✨
             </div>
         </div>
 `;
