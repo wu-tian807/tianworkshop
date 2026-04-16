@@ -166,6 +166,12 @@
             border-radius: 50%;
             z-index: -1;
             animation: pulse-floor 2s infinite alternate;
+            transition: all 0.3s ease;
+        }
+        .stage-floor:hover {
+            transform: scale(1.2);
+            background: radial-gradient(ellipse at center, rgba(255,107,107,0.5) 0%, rgba(0,0,0,0) 70%);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
         }
         @keyframes pulse-floor {
             from { transform: scale(1); opacity: 0.6; }
@@ -434,4 +440,4 @@
 <!-- [14:12 UTC] Adding soft glow effect to the Live2D canvas when music is playing -->
 <!-- [16:12 UTC] Integrating idle animations for the Live2D model (breathing, hair sway) -->
 <!-- [18:42 UTC] Sleep mode engaged. Reducing render framerate to save energy. -->
-<!-- [09:42 UTC] Added interactive spark particles when Master clicks anywhere on the stage! ✨🖱️ -->
+<!-- [13:43 UTC] Added hover effect to the stage floor! 🌟 -->
