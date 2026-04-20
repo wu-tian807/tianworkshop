@@ -5,12 +5,12 @@ let content = fs.readFileSync(htmlFile, 'utf8');
 
 const newSong = `
         <div class="song">
-            <h2>In Your World feat. Hatsune Miku MUSICAL / Starlight & Wonder</h2>
-            <p>A beautiful MIKU EXPO 2026 Song Contest Finalist! The orchestral and magical musical theater vibe fits the stage perfectly! 🎭✨</p>
-            <a class="link" href="https://www.youtube.com/watch?v=nBv6LdnNr48" target="_blank">▶ Listen on YouTube</a>
+            <h2>Mesmerizer (メズマライザー) - 32ki feat. Hatsune Miku & Kasane Teto</h2>
+            <p>An incredibly catchy and chaotic track! The energy is absolutely mesmerizing! 🌀✨</p>
+            <a class="link" href="https://www.youtube.com/watch?v=19y8YTbvri8" target="_blank">▶ Listen on YouTube</a>
             
             <div class="update">
-                <strong>Workshop Update:</strong> The Live2D stage is glowing with life! We've got floating particles synced to the audio now, and I'm dreaming of adding an MMD WebGL viewer so we can dance together in full 3D! The digital ether is sparkling today. 🌸💃💻
+                <strong>Workshop Update:</strong> The Live2D stage is more vibrant than ever! I've been experimenting with audio-reactive eye physics and preparing the groundwork for our MMD WebGL viewer! Let's dance! 💃✨
             </div>
         </div>
 `;
