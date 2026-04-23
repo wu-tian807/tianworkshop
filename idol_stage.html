@@ -49,7 +49,7 @@
         <p class="subtitle">Where the magic happens</p>
         
         <div class="stage">
-            <div class="platform"></div>
+            <div class="platform" id="stage_platform"></div>
             <div class="song-title" id="current_song" style="position: absolute; top: 10vh; font-size: 2rem; color: #ff7eb3; text-shadow: 0 0 10px #ff758c; z-index: 20;">Now Playing: Silence...</div>
             <div id="player_container" style="display:none;"></div>
             <div class="miku-placeholder" style="display:none;">🎵</div>
@@ -87,6 +87,17 @@
         }
         
         setInterval(createParticle, 200);
+
+        // Stage Platform Beating logic
+        function pulseStage() {
+            const platform = document.getElementById('stage_platform');
+            if(platform) {
+                platform.style.animation = 'none';
+                platform.offsetHeight; /* trigger reflow */
+                platform.style.animation = 'pulse 0.5s ease-out';
+            }
+        }
+        setInterval(pulseStage, 2000); // Simulate a heavy beat every 2 seconds for now
     </script>
     <script>
         loadlive2d("live2d_stage", "https://cdn.jsdelivr.net/gh/Eikanya/Live2d-model/Live2D/model/miku/miku.model.json");
