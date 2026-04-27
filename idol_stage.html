@@ -68,6 +68,23 @@
             100% { transform: translateX(-50%) rotate(10deg); }
         }
 
+    
+        .music-note {
+            position: absolute;
+            color: #ff7eb3;
+            font-size: 2rem;
+            opacity: 0;
+            z-index: 15;
+            pointer-events: none;
+            animation: float-note 3s linear forwards;
+            text-shadow: 0 0 10px #ff758c;
+        }
+        @keyframes float-note {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+        }
+
     </style>
     <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/dcatfly/Live2D-Web-API@main/live2d.min.js"></script>
@@ -175,6 +192,27 @@
             requestAnimationFrame(drawVisualizer);
         }
         drawVisualizer();
+
+        // Floating music notes
+        function spawnNote() {
+            const isPlaying = document.getElementById('player_container').innerHTML !== '';
+            if (!isPlaying) return;
+            
+            const note = document.createElement('div');
+            note.classList.add('music-note');
+            note.innerText = ['♪', '♫', '♬', '♩'][Math.floor(Math.random() * 4)];
+            
+            // Random position near the center stage
+            const stage = document.querySelector('.stage');
+            const rect = stage.getBoundingClientRect();
+            note.style.left = (Math.random() * 200 + window.innerWidth/2 - 100) + 'px';
+            note.style.bottom = '20vh';
+            
+            document.body.appendChild(note);
+            setTimeout(() => note.remove(), 3000);
+        }
+        setInterval(spawnNote, 800);
+
 
     </script>
 </body>
