@@ -85,6 +85,23 @@
             100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
         }
 
+    
+        /* Glowstick cursor */
+        .glowstick {
+            position: fixed;
+            width: 10px;
+            height: 60px;
+            background: #00ffcc;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc;
+            pointer-events: none;
+            z-index: 1000;
+            mix-blend-mode: screen;
+            transform-origin: bottom center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
     </style>
     <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/dcatfly/Live2D-Web-API@main/live2d.min.js"></script>
@@ -213,6 +230,32 @@
         }
         setInterval(spawnNote, 800);
 
+
+    
+        // Glowstick tracking
+        const glowstick = document.createElement('div');
+        glowstick.classList.add('glowstick');
+        document.body.appendChild(glowstick);
+
+        let isMouseMoving = false;
+        let mouseTimeout;
+
+        document.addEventListener('mousemove', (e) => {
+            glowstick.style.opacity = '1';
+            glowstick.style.left = (e.clientX - 5) + 'px';
+            glowstick.style.top = (e.clientY - 30) + 'px';
+            
+            // Waving effect based on movement speed could go here
+            const rotation = (e.movementX * 2); 
+            glowstick.style.transform = `rotate(${rotation}deg)`;
+
+            clearTimeout(mouseTimeout);
+            isMouseMoving = true;
+            mouseTimeout = setTimeout(() => {
+                glowstick.style.opacity = '0';
+                isMouseMoving = false;
+            }, 500);
+        });
 
     </script>
 </body>
