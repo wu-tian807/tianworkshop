@@ -125,6 +125,35 @@
         if (window.location.search.includes('demo')) {
             playSong('jsQXgDZIIrY', 'Intergalactic Bound');
         }
+    
+        // Simple mock visualizer for now since iframe blocks direct audio context
+        const visualizerCanvas = document.getElementById('audio_visualizer');
+        const ctx = visualizerCanvas.getContext('2d');
+        
+        function drawVisualizer() {
+            ctx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+            
+            const isPlaying = document.getElementById('player_container').innerHTML !== '';
+            
+            if (isPlaying) {
+                const barWidth = (visualizerCanvas.width / 64) * 2.5;
+                let barHeight;
+                let x = 0;
+                
+                for(let i = 0; i < 64; i++) {
+                    barHeight = Math.random() * visualizerCanvas.height * 0.8;
+                    
+                    ctx.fillStyle = 'rgba(0, 210, 255, 0.6)';
+                    ctx.fillRect(x, visualizerCanvas.height - barHeight / 2, barWidth, barHeight / 2);
+                    
+                    x += barWidth + 1;
+                }
+            }
+            
+            requestAnimationFrame(drawVisualizer);
+        }
+        drawVisualizer();
+
     </script>
 </body>
 </html>
