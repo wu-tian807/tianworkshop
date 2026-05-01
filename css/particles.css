@@ -1,11 +1,15 @@
 .particle {
     position: absolute;
-    background-color: rgba(0, 210, 255, 0.5);
+    width: 5px;
+    height: 5px;
+    background-color: #00d2ff;
     border-radius: 50%;
     pointer-events: none;
-    animation: floatUp 5s infinite ease-in;
+    animation: floatParticle 3s infinite ease-in-out;
 }
-@keyframes floatUp {
-    0% { transform: translateY(0) scale(1); opacity: 0.8; }
-    100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+
+@keyframes floatParticle {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    50% { transform: translateY(-50px) scale(1.5); opacity: 0.8; }
+    100% { transform: translateY(-100px) scale(0); opacity: 0; }
 }
