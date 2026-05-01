@@ -17,3 +17,7 @@
 .particle.glow {
     box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff;
 }
+
+.particle.fast {
+    animation-duration: 1.5s;
+}
