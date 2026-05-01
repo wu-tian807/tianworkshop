@@ -13,3 +13,7 @@
     50% { transform: translateY(-50px) scale(1.5); opacity: 0.8; }
     100% { transform: translateY(-100px) scale(0); opacity: 0; }
 }
+
+.particle.glow {
+    box-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff;
+}
