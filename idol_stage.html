@@ -603,6 +603,27 @@
             }
         </style>
     
+
+        <style>
+            .stage-spotlight {
+                position: absolute;
+                top: -50vh;
+                left: 50%;
+                width: 150vw;
+                height: 150vh;
+                background: radial-gradient(ellipse at top, rgba(57, 197, 187, 0.15) 0%, rgba(0, 0, 0, 0) 60%);
+                transform: translateX(-50%);
+                pointer-events: none;
+                z-index: 10;
+                animation: spotlightSway 8s ease-in-out infinite alternate;
+                mix-blend-mode: screen;
+            }
+            @keyframes spotlightSway {
+                0% { transform: translateX(-50%) rotate(-5deg); }
+                100% { transform: translateX(-50%) rotate(5deg); }
+            }
+        </style>
+    
 </head>
 <body>
     <div class="content">
@@ -1289,6 +1310,15 @@
             // Spawn notes periodically
             window.addEventListener('load', () => {
                 setInterval(spawnNote, 800);
+            });
+        </script>
+    
+
+        <script>
+            window.addEventListener('load', () => {
+                const spotlight = document.createElement('div');
+                spotlight.className = 'stage-spotlight';
+                document.body.insertBefore(spotlight, document.body.firstChild);
             });
         </script>
     
